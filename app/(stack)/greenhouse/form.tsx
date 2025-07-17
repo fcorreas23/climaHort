@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Alert, Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { v4 as uuidv4 } from 'uuid';
+import { Dropdown } from 'react-native-element-dropdown';
 
 export type Greenhouse = {
   id: string;
@@ -18,17 +19,23 @@ export type Greenhouse = {
   cover: 'Polietileno' | 'Policarbonato';
 };
 
+const data = [
+  { label: 'Capilla', value: 'Capilla' },
+  { label: 'Túnel', value: 'Tunel' }
+];
+
 export default function GreenhouseForm() {
   const router = useRouter();
   const [form, setForm] = useState<Partial<Greenhouse>>({});
   const [debugInfo, setDebugInfo] = useState<string>('');
+  const [value, setValue] = useState(null);
 
   const handleChange = (key: keyof Greenhouse, value: any) => {
     setForm({ ...form, [key]: value });
   };
 
   const handleSubmit = async () => {
-    /* const requiredFields: (keyof Greenhouse)[] = [
+    const requiredFields: (keyof Greenhouse)[] = [
       'name', 'type', 'length', 'width', 'gutterHeight', 'roofHeight', 'structure', 'cover'
     ];
 
@@ -39,7 +46,7 @@ export default function GreenhouseForm() {
     if (missing.length > 0) {
       Alert.alert('Campos incompletos', `Faltan: ${missing.join(', ')}`);
       return;
-    } */
+    }
 
     const newGreenhouse: Greenhouse = {
       ...(form as Greenhouse),
@@ -71,52 +78,17 @@ export default function GreenhouseForm() {
         placeholder="Ej: Invernadero Norte"
       />
 
-      <Text className="mb-1">Tipo</Text>
-      <RNPickerSelect
-        onValueChange={(value) => handleChange('type', value)}
-        placeholder={{ label: 'Selecciona tipo', value: null }}
-        items={[
-          { label: 'Capilla', value: 'Capilla' },
-          { label: 'Tunel', value: 'Tunel' },
-        ]}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          inputIOS: styles.picker,
-          inputAndroid: styles.picker,
-        }}
+      <Text className="mb-2">Tipo de invernadero</Text>
+      <Dropdown
+        data={data}
+        labelField="label"
+        valueField="value"
+        placeholder="Selecciona tipo"
+        value={value}
+        onChange={item => setValue(item.value)}
+        style={{ borderWidth: 1, borderRadius: 8, padding: 12, backgroundColor: 'white' }}
       />
 
-      <Text className="mb-1">Estructura</Text>
-      <RNPickerSelect
-        onValueChange={(value) => handleChange('structure', value)}
-        placeholder={{ label: 'Selecciona estructura', value: null }}
-        items={[
-          { label: 'Acero', value: 'Acero' },
-          { label: 'Aluminio', value: 'Aluminio' },
-          { label: 'Madera', value: 'Madera' },
-          { label: 'PVC', value: 'PVC' },
-        ]}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          inputIOS: styles.picker,
-          inputAndroid: styles.picker,
-        }}
-      />
-
-      <Text className="mb-1 mt-4">Cubierta</Text>
-      <RNPickerSelect
-        onValueChange={(value) => handleChange('cover', value)}
-        placeholder={{ label: 'Selecciona cubierta', value: null }}
-        items={[
-          { label: 'Polietileno', value: 'Polietileno' },
-          { label: 'Policarbonato', value: 'Policarbonato' },
-        ]}
-        useNativeAndroidPickerStyle={false}
-        style={{
-          inputIOS: styles.picker,
-          inputAndroid: styles.picker,
-        }}
-      />
 
             {/* Largo y Ancho en una fila */}
       <View className="flex-row gap-x-4 mb-4">

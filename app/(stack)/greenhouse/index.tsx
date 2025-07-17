@@ -1,4 +1,5 @@
 import { getGreenhouses } from '@/store/storage';
+import SafeLayout from '@/components/SafeLayout';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
@@ -19,7 +20,7 @@ export default function GreenhouseIndex() {
   );
   
   return (
-    <View className="flex-1 bg-white p-4">
+    <SafeLayout>
       <Text className="text-2xl font-bold mb-4">Invernaderos</Text>
 
       <FlatList
@@ -37,6 +38,6 @@ export default function GreenhouseIndex() {
       <Pressable onPress={() => router.push('/(stack)/greenhouse/form')} className="bg-blue-600 py-3 rounded mt-4">
         <Text className="text-white text-center font-bold">Agregar Invernadero</Text>
       </Pressable>
-    </View>
+    </SafeLayout>
   );
 }
