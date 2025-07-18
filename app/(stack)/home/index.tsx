@@ -10,7 +10,7 @@ const index = () => {
       className="flex-1 justify-center items-center"
     >
       <View className="bg-black/50 p-6 rounded-xl">
-        <Text className="text-white text-3xl font-bold mb-4 text-center">
+        <Text className="text-white text-3xl font-bold mb-12 text-center">
           Bienvenido a la App
         </Text>
         <Pressable

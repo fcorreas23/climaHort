@@ -20,6 +20,7 @@ export default function VPDCalculatorScreen() {
   const [crop, setCrop] = useState<string>('');
   const [temp, setTemp] = useState('');
   const [humidity, setHumidity] = useState('');
+  const [soilmoisture, setSoilMoisture] = useState('');
   const [vpd, setVpd] = useState<number | null>(null);
   const [result, setResult] = useState('');
 
@@ -56,7 +57,7 @@ export default function VPDCalculatorScreen() {
             borderRadius: 8,
             paddingHorizontal: 12,
             paddingVertical: 12,
-            backgroundColor: '#f1f1f1',
+            backgroundColor: '#fff',
           }}
           placeholderStyle={{
             color: 'gray',
@@ -98,8 +99,8 @@ export default function VPDCalculatorScreen() {
           <Text className="text-xl font-bold">Humedad del Suelo (%)</Text>
           <TextInput
             keyboardType="numeric"
-            value={humidity}
-            onChangeText={setHumidity}
+            value={soilmoisture}
+            onChangeText={setSoilMoisture}
             className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
             placeholder="%"
           />

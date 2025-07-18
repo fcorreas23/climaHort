@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useState } from 'react';
+import { PaperProvider } from 'react-native-paper';
 import { initDB } from '@/database/db'; // Ajusta según tu estructura
 import "../global.css";
 import { View } from 'react-native';
@@ -41,9 +42,11 @@ const RootLayout = () => {
   if (!loaded || !dbReady) return null;
 
   return (
-    <View className="flex-1" onLayout={onLayoutRootView}>
-      <Slot />
-    </View>
+    <PaperProvider>
+      <View onLayout={onLayoutRootView} className="flex-1">
+        <Slot />
+      </View>
+    </PaperProvider>
   );
 }
 

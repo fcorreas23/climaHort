@@ -17,7 +17,11 @@ const StackLayout = () => {
         />
         <Stack.Screen 
           name="greenhouse/index" 
-          options={{ title: 'GreenHouse' }} 
+          options={{ title: 'Invernaderos' }} 
+        />
+        <Stack.Screen 
+          name="greenhouse/form" 
+          options={{ title: 'Registar Invernadero' }} 
         />
         <Stack.Screen 
           name="history/index" 
