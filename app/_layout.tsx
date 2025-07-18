@@ -1,8 +1,13 @@
 import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { initDB } from '@/database/db'; // Ajusta según tu estructura
 import "../global.css";
+import { View } from 'react-native';
+
+// Mantiene visible el splash mientras se carga
+SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   
@@ -12,16 +17,34 @@ const RootLayout = () => {
     "ubuntu-medium": require("../assets/fonts/Ubuntu-Medium.ttf"),
     "ubuntu-regular": require("../assets/fonts/Ubuntu-Regular.ttf"),
   });
+  const [dbReady, setDbReady] = useState(false);
 
   useEffect(() => {
-    if (error) throw error;
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded, error]);
+    const prepare = async () => {
+      try {
+        await initDB(); // Inicializa SQLite
+        setDbReady(true);
+      } catch (e) {
+        console.error("Error initializing DB:", e);
+      }
+    };
 
-  if (!loaded && !error) return null;
-  
-  
-  return <Slot />
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(() => {
+    if (loaded && dbReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, dbReady]);
+
+  if (!loaded || !dbReady) return null;
+
+  return (
+    <View className="flex-1" onLayout={onLayoutRootView}>
+      <Slot />
+    </View>
+  );
 }
 
 export default RootLayout

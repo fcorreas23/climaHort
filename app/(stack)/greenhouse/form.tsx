@@ -1,187 +1,279 @@
-import SafeLayout from '@/components/SafeLayout';
-import { saveGreenhouse } from '@/store/storage';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Alert, Keyboard, Pressable, Text, TextInput, View } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import { v4 as uuidv4 } from 'uuid';
+import { View, Text, TextInput, Switch, ScrollView, Pressable } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Dropdown } from 'react-native-element-dropdown';
+import {
+  insertGreenhouse,
+  updateGreenhouseById,
+  getGreenhouseById,
+} from '@/database/repository/greenhouseRepository';
 
-export type Greenhouse = {
-  id: string;
-  name: string;
-  type: 'Capilla' | 'Tunel';
-  length: number;
-  width: number;
-  gutterHeight: number;
-  roofHeight: number;
-  structure: 'Acero' | 'Aluminio' | 'Madera' | 'PVC';
-  cover: 'Polietileno' | 'Policarbonato';
-};
-
-const data = [
+const types = [
   { label: 'Capilla', value: 'Capilla' },
-  { label: 'Túnel', value: 'Tunel' }
+  { label: 'Túnel', value: 'Tunel' },
+];
+
+const covers = [
+  { label: 'Polietileno', value: 'Polietileno' },
+  { label: 'Policarbonato', value: 'Policarbonato' },
 ];
 
 export default function GreenhouseForm() {
+  const { id } = useLocalSearchParams();
   const router = useRouter();
-  const [form, setForm] = useState<Partial<Greenhouse>>({});
-  const [debugInfo, setDebugInfo] = useState<string>('');
-  const [value, setValue] = useState(null);
+  const isEditMode = !!id;
 
-  const handleChange = (key: keyof Greenhouse, value: any) => {
+  const [form, setForm] = useState({
+    nombre: '',
+    tipo: 'Capilla',
+    materialCubierta: 'Polietileno',
+    largo: '',
+    ancho: '',
+    alturaCanal: '',
+    alturaTecho: '',
+    tieneVentanas: false,
+    numeroVentanas: '',
+    anchoVentana: '',
+    altoVentana: '',
+    tieneLucarnas: false,
+    numeroLucarnas: '',
+    anchoLucarna: '',
+    altoLucarna: '',
+  });
+
+  useEffect(() => {
+    if (isEditMode) {
+      const load = async () => {
+        try {
+          const data = await getGreenhouseById(Number(id));
+          if (data) {
+            setForm({
+              nombre: data.name,
+              tipo: data.type,
+              materialCubierta: data.cover_material,
+              largo: data.length?.toString() || '',
+              ancho: data.width?.toString() || '',
+              alturaCanal: data.gutter_height?.toString() || '',
+              alturaTecho: data.roof_height?.toString() || '',
+              tieneVentanas: data.has_windows === 1,
+              numeroVentanas: data.window_count?.toString() || '',
+              anchoVentana: data.window_width?.toString() || '',
+              altoVentana: data.window_height?.toString() || '',
+              tieneLucarnas: data.has_skylights === 1,
+              numeroLucarnas: data.skylight_count?.toString() || '',
+              anchoLucarna: data.skylight_width?.toString() || '',
+              altoLucarna: data.skylight_height?.toString() || '',
+            });
+          }
+        } catch (error) {
+          console.error('Error al cargar datos del invernadero', error);
+        }
+      };
+      load();
+    }
+  }, [id]);
+
+  const handleChange = (key: string, value: string | boolean) => {
     setForm({ ...form, [key]: value });
   };
 
-  const handleSubmit = async () => {
-    const requiredFields: (keyof Greenhouse)[] = [
-      'name', 'type', 'length', 'width', 'gutterHeight', 'roofHeight', 'structure', 'cover'
-    ];
+  const parseFloatSafe = (value: string) => parseFloat(value.replace(',', '.')) || 0;
 
-    const missing = requiredFields.filter(field =>
-      form[field] === undefined || form[field] === null || form[field] === ''
-    );
+  const calcularSuperficieVentilacion = () => {
+    const largo = parseFloatSafe(form.largo);
+    const ancho = parseFloatSafe(form.ancho);
+    const areaTotal = largo * ancho;
 
-    if (missing.length > 0) {
-      Alert.alert('Campos incompletos', `Faltan: ${missing.join(', ')}`);
-      return;
-    }
+    const superficieVentanas =
+      parseFloatSafe(form.numeroVentanas) *
+      parseFloatSafe(form.anchoVentana) *
+      parseFloatSafe(form.altoVentana);
 
-    const newGreenhouse: Greenhouse = {
-      ...(form as Greenhouse),
-      id: uuidv4(),
+    const superficieLucarnas =
+      parseFloatSafe(form.numeroLucarnas) *
+      parseFloatSafe(form.anchoLucarna) *
+      parseFloatSafe(form.altoLucarna);
+
+    const superficieTotal = superficieVentanas + superficieLucarnas;
+    const porcentaje = areaTotal > 0 ? (superficieTotal / areaTotal) * 100 : 0;
+
+    return {
+      superficieTotal: superficieTotal.toFixed(2),
+      porcentaje: porcentaje.toFixed(2),
     };
-
-    console.log('Datos a guardar:', newGreenhouse);
-    setDebugInfo(JSON.stringify(newGreenhouse, null, 2));  // con sangría
-
-
-    try {
-      await saveGreenhouse(newGreenhouse);
-      Alert.alert('Éxito', 'Invernadero guardado correctamente');
-      router.back();
-    } catch (error) {
-      console.error('❌ Error al guardar desde formulario:', error);
-      Alert.alert('Error', 'No se pudo guardar el invernadero');
-    }
   };
 
-  return (
-    <SafeLayout>
-      <Text className="text-2xl font-bold mb-4">Registrar Invernadero</Text>
-      <Text className="mb-1">Nombre</Text>
-      <TextInput
-        value={form.name || ''}
-        onChangeText={(text) => handleChange('name', text)}
-        className="border border-gray-400 rounded-md px-4 py-3 mb-4 bg-white"
-        placeholder="Ej: Invernadero Norte"
-      />
+  const { superficieTotal, porcentaje } = calcularSuperficieVentilacion();
 
-      <Text className="mb-2">Tipo de invernadero</Text>
+  return (
+    <ScrollView className="p-4 space-y-4 bg-white">
+      <Text className="text-2xl font-bold mb-2">
+        {isEditMode ? 'Editar Invernadero' : 'Registrar Invernadero'}
+      </Text>
+
+      <Input label="Nombre" value={form.nombre} onChangeText={(v) => handleChange('nombre', v)} />
+
+      <Text className="mb-2 text-base font-normal">Tipo de invernadero</Text>
       <Dropdown
-        data={data}
+        data={types}
         labelField="label"
         valueField="value"
-        placeholder="Selecciona tipo"
-        value={value}
-        onChange={item => setValue(item.value)}
-        style={{ borderWidth: 1, borderRadius: 8, padding: 12, backgroundColor: 'white' }}
+        placeholder="Selecciona el tipo..."
+        value={form.tipo}
+        onChange={item => handleChange('tipo', item.value)}
+        style={dropdownStyle}
+        placeholderStyle={placeholderStyle}
+        selectedTextStyle={selectedTextStyle}
+        containerStyle={containerStyle}
       />
 
+      <Text className="mb-2 mt-2 text-base font-normal">Material de cubierta</Text>
+      <Dropdown
+        data={covers}
+        labelField="label"
+        valueField="value"
+        placeholder="Selecciona el material..."
+        value={form.materialCubierta}
+        onChange={item => handleChange('materialCubierta', item.value)}
+        style={dropdownStyle}
+        placeholderStyle={placeholderStyle}
+        selectedTextStyle={selectedTextStyle}
+        containerStyle={containerStyle}
+      />
 
-            {/* Largo y Ancho en una fila */}
-      <View className="flex-row gap-x-4 mb-4">
-        <View className="flex-1">
-          <Text className="mb-1">Largo (m)</Text>
-          <TextInput
-            keyboardType="numeric"
-            returnKeyType="done"
-            onSubmitEditing={() => Keyboard.dismiss()}
-            value={form.length?.toString() || ''}
-            onChangeText={(text) => {
-              const value = parseFloat(text);
-              handleChange('length', isNaN(value) ? undefined : value);
-            }}
-            className="border border-gray-400 rounded-md px-4 py-3 bg-white"
-            placeholder="Ej: 30"
-
-          />
+      <View className="mt-2">
+        <Text className="text-lg font-semibold mb-2">Dimensiones</Text>
+        <View className="flex-row gap-4">
+          <View className="flex-1">
+            <Input label="Largo (m)" keyboardType="numeric" value={form.largo} onChangeText={(v) => handleChange('largo', v)} />
+          </View>
+          <View className="flex-1">
+            <Input label="Ancho (m)" keyboardType="numeric" value={form.ancho} onChangeText={(v) => handleChange('ancho', v)} />
+          </View>
         </View>
-        <View className="flex-1">
-          <Text className="mb-1">Ancho (m)</Text>
-          <TextInput
-            keyboardType="numeric"
-            returnKeyType="done"
-            onSubmitEditing={() => Keyboard.dismiss()}
-            value={form.width?.toString() || ''}
-            onChangeText={(text) => {
-              const value = parseFloat(text);
-              handleChange('width', isNaN(value) ? undefined : value);
-            }}
-            className="border border-gray-400 rounded-md px-4 py-3 bg-white"
-            placeholder="Ej: 10"
-          />
+        <View className="flex-row gap-4">
+          <View className="flex-1">
+            <Input label="Altura a la canal (m)" keyboardType="numeric" value={form.alturaCanal} onChangeText={(v) => handleChange('alturaCanal', v)} />
+          </View>
+          <View className="flex-1">
+            <Input label="Altura del techo (m)" keyboardType="numeric" value={form.alturaTecho} onChangeText={(v) => handleChange('alturaTecho', v)} />
+          </View>
         </View>
       </View>
 
-      {/* Alturas en una fila */}
-      <View className="flex-row gap-x-4 mb-4">
-        <View className="flex-1">
-          <Text className="mb-1">Altura canal (m)</Text>
-          <TextInput
-            keyboardType="numeric"
-            returnKeyType="done"
-            onSubmitEditing={() => Keyboard.dismiss()}
-            value={form.gutterHeight?.toString() || ''}
-            onChangeText={(text) => {
-              const value = parseFloat(text);
-              handleChange('gutterHeight', isNaN(value) ? undefined : value);
-            }}
-            className="border border-gray-400 rounded-md px-4 py-3 bg-white"
-            placeholder="Ej: 2.5"
-          />
+      <View className="flex-row justify-between items-center mt-4">
+        <Text className="text-lg font-semibold">¿Tiene ventanas?</Text>
+        <Switch value={form.tieneVentanas} onValueChange={(v) => handleChange('tieneVentanas', v)} />
+      </View>
+      {form.tieneVentanas && (
+        <View className="mt-2">
+          <Text className="text-base font-normal mb-2">Ventanas</Text>
+          <View className="flex-row gap-4">
+            <View className="flex-1">
+              <Input label="N°" keyboardType="numeric" value={form.numeroVentanas} onChangeText={(v) => handleChange('numeroVentanas', v)} />
+            </View>
+            <View className="flex-1">
+              <Input label="Ancho (m)" keyboardType="numeric" value={form.anchoVentana} onChangeText={(v) => handleChange('anchoVentana', v)} />
+            </View>
+            <View className="flex-1">
+              <Input label="Alto (m)" keyboardType="numeric" value={form.altoVentana} onChangeText={(v) => handleChange('altoVentana', v)} />
+            </View>
+          </View>
         </View>
-        <View className="flex-1">
-          <Text className="mb-1">Altura techo (m)</Text>
-          <TextInput
-            keyboardType="numeric"
-            returnKeyType="done"
-            onSubmitEditing={() => Keyboard.dismiss()}
-            value={form.roofHeight?.toString() || ''}
-            onChangeText={(text) => {
-              const value = parseFloat(text);
-              handleChange('roofHeight', isNaN(value) ? undefined : value);
-            }}
-            className="border border-gray-400 rounded-md px-4 py-3 bg-white"
-            placeholder="Ej: 4"
-          />
+      )}
+
+      <View className="flex-row justify-between items-center mt-4">
+        <Text className="text-lg font-semibold">¿Tiene lucarnas?</Text>
+        <Switch value={form.tieneLucarnas} onValueChange={(v) => handleChange('tieneLucarnas', v)} />
+      </View>
+      {form.tieneLucarnas && (
+        <View className="mt-2">
+          <Text className="text-base font-normal mb-2">Lucarnas</Text>
+          <View className="flex-row gap-4">
+            <View className="flex-1">
+              <Input label="N°" keyboardType="numeric" value={form.numeroLucarnas} onChangeText={(v) => handleChange('numeroLucarnas', v)} />
+            </View>
+            <View className="flex-1">
+              <Input label="Ancho (m)" keyboardType="numeric" value={form.anchoLucarna} onChangeText={(v) => handleChange('anchoLucarna', v)} />
+            </View>
+            <View className="flex-1">
+              <Input label="Alto (m)" keyboardType="numeric" value={form.altoLucarna} onChangeText={(v) => handleChange('altoLucarna', v)} />
+            </View>
+          </View>
         </View>
+      )}
+
+      <View className="bg-gray-100 p-4 rounded-xl mt-6">
+        <Text className="text-base font-medium">Superficie ventilación: {superficieTotal} m²</Text>
+        <Text className="text-base">Porcentaje sobre el área total: {porcentaje} %</Text>
       </View>
 
-      <Pressable onPress={handleSubmit} className="bg-green-600 py-4 mt-6 rounded">
-        <Text className="text-white text-center font-bold text-lg">Guardar</Text>
+      <Pressable
+        onPress={async () => {
+          try {
+            const greenhouseToSave = {
+              ...form,
+              ventilation_area: superficieTotal,
+              ventilation_percent: porcentaje,
+            };
+
+            if (isEditMode) {
+              await updateGreenhouseById(Number(id), greenhouseToSave);
+              alert('Invernadero actualizado ✅');
+            } else {
+              await insertGreenhouse(greenhouseToSave);
+              alert('Invernadero guardado ✅');
+            }
+
+            router.back();
+          } catch (error) {
+            console.error('Error al guardar el invernadero:', error);
+            alert('Error al guardar el invernadero ❌');
+          }
+        }}
+        className="mt-4 bg-green-600 p-4 rounded-xl"
+      >
+        <Text className="text-white text-center font-bold text-base">
+          {isEditMode ? 'Actualizar' : 'Guardar'}
+        </Text>
       </Pressable>
-      {debugInfo !== '' && (
-      <View className="mt-6 bg-gray-100 border border-gray-300 rounded p-4">
-        <Text className="text-sm font-mono text-gray-800">Datos enviados:</Text>
-        <Text className="text-xs font-mono text-gray-600">{debugInfo}</Text>
-      </View>
-    )}
-    </SafeLayout>
+    </ScrollView>
   );
 }
 
-const styles = {
-  picker: {
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 8,
-    color: 'black',
-    backgroundColor: '#f1f1f1',
-    marginBottom: 16,
-    fontSize: 16,
-  },
+function Input({
+  label,
+  value,
+  onChangeText,
+  keyboardType = 'default',
+}: {
+  label: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  keyboardType?: 'default' | 'numeric';
+}) {
+  return (
+    <View className="space-y-1 mb-4 min-w-0">
+      <Text className="text-base">{label}</Text>
+      <TextInput
+        className="border border-gray-300 rounded-md px-3 py-2"
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+      />
+    </View>
+  );
+}
+
+const dropdownStyle = {
+  borderWidth: 1,
+  borderColor: 'gray',
+  borderRadius: 8,
+  paddingHorizontal: 10,
+  paddingVertical: 10,
+  backgroundColor: '#fff',
 };
+
+const placeholderStyle = { color: 'gray', fontSize: 14 };
+const selectedTextStyle = { fontSize: 14, color: 'black' };
+const containerStyle = { borderRadius: 8 };

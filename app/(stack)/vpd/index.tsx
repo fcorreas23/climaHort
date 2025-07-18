@@ -1,8 +1,9 @@
 import { calculateVPD, getVPDStatus } from '@/utils/vpdUtils';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import { vpdRanges } from "../../../store/vpdRanges";
+import { Dropdown } from 'react-native-element-dropdown';
+
 
 
 
@@ -25,6 +26,7 @@ export default function VPDCalculatorScreen() {
   const handleCalculate = () => {
     const t = parseFloat(temp);
     const h = parseFloat(humidity);
+
     if (isNaN(t) || isNaN(h) || !crop) {
       setResult('Completa todos los campos correctamente');
       return;
@@ -38,59 +40,67 @@ export default function VPDCalculatorScreen() {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ padding: 20 }}>
-        <Text className="text-4xl font-bold text-center mb-6">Calculadora de VPD</Text>
-        
-          <Text className="mb-1 text-base">Selecciona el cultivo:</Text>
-          <RNPickerSelect
-            onValueChange={(value) => setCrop(value)}
-            placeholder={{ label: 'Selecciona un cultivo...', value: '' }}
-            items={vpdRanges.map(c => ({ label: c.crop, value: c.crop }))}
-            useNativeAndroidPickerStyle={false}
-            style={{
-              inputIOS: {
-                paddingVertical: 14,
-                paddingHorizontal: 14,
-                borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 8,
-                color: 'black',
-                backgroundColor: '#f1f1f1',
-                marginBottom: 16,
-                fontSize: 16
-              },
-              inputAndroid: {
-                paddingVertical: 8,
-                paddingHorizontal: 10,
-                borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 4,
-                color: 'black',
-                backgroundColor: 'white',
-                marginBottom: 16,
-              },
-            }}
+      <ScrollView contentContainerStyle={{ padding: 10 }}>
+        <Text className="text-2xl font-bold text-center mb-6">Calculadora de VPD</Text>   
+        <Text className="mb-1 text-base">Selecciona el cultivo:</Text>
+        <Dropdown
+          data={vpdRanges.map(c => ({ label: c.crop, value: c.crop }))}
+          labelField="label"
+          valueField="value"
+          placeholder="Selecciona un cultivo..."
+          value={crop}
+          onChange={item => setCrop(item.value)}
+          style={{
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 12,
+            backgroundColor: '#f1f1f1',
+          }}
+          placeholderStyle={{
+            color: 'gray',
+            fontSize: 16,
+          }}
+          selectedTextStyle={{
+            fontSize: 16,
+            color: 'black',
+          }}
+          containerStyle={{
+            borderRadius: 8,
+          }}
         />
 
         {/* TEMP */}
-        <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-2xl font-bold">Temperatura (°C)</Text>
+        <View className="flex-row items-center justify-between mt-5 mb-4">
+          <Text className="text-xl font-bold">Temperatura (°C)</Text>
           <TextInput
             keyboardType="numeric"
             value={temp}
             onChangeText={setTemp}
-            className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-lg"
+            className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
             placeholder="°C"
           />
         </View>
         {/* HUMEDAD */}
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-2xl font-bold">Humedad (%)</Text>
+          <Text className="text-xl font-bold">Humedad Relativa (%)</Text>
           <TextInput
             keyboardType="numeric"
             value={humidity}
             onChangeText={setHumidity}
-            className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-lg"
+            className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
+            placeholder="%"
+          />
+        </View>
+        {/* HUMEDAD SUELO */}
+        <View className="flex-row items-center justify-between mb-4">
+          <Text className="text-xl font-bold">Humedad del Suelo (%)</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={humidity}
+            onChangeText={setHumidity}
+            className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
             placeholder="%"
           />
         </View>
