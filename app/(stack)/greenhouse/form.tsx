@@ -1,32 +1,38 @@
-import { View, Text, TextInput, Switch, ScrollView, Pressable, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  Switch, 
+  ScrollView, 
+  Pressable, 
+  KeyboardAvoidingView, 
+  Platform, 
+  SafeAreaView 
+} from 'react-native';
+import { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Dropdown } from 'react-native-element-dropdown';
+import { Snackbar } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
+
+import DropdownSelector from '@/components/DropdownSelector';
+import NumericInputField from '@/components/NumericInputField';
+import SectionTitle from '@/components/SectionTitle';
+import TextInputField from '@/components/TextInputField';
 import {
   insertGreenhouse,
   updateGreenhouseById,
   getGreenhouseById,
 } from '@/database/repository/greenhouseRepository';
-import { Ionicons } from '@expo/vector-icons';
-import { Snackbar } from 'react-native-paper';
 
-
-const types = [
-  { label: 'Capilla', value: 'Capilla' },
-  { label: 'Túnel', value: 'Tunel' },
-];
-
-const covers = [
-  { label: 'Polietileno', value: 'Polietileno' },
-  { label: 'Policarbonato', value: 'Policarbonato' },
-];
+const types = ['Capilla', 'Túnel'];
+const covers = ['Polietileno', 'Policarbonato'];
 
 export default function GreenhouseForm() {
   const { id } = useLocalSearchParams();
-  const router = useRouter();
   const isEditMode = !!id;
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const router = useRouter();
+  
   const [snackbarText, setSnackbarText] = useState('');
+  const [visible, setVisible] = useState(false);
 
   const [form, setForm] = useState({
     nombre: '',
@@ -47,171 +53,98 @@ export default function GreenhouseForm() {
   });
 
   useEffect(() => {
-    if (isEditMode) {
-      const load = async () => {
-        try {
-          const data = await getGreenhouseById(Number(id));
-          if (data) {
-            setForm({
-              nombre: data.name,
-              tipo: data.type,
-              materialCubierta: data.cover_material,
-              largo: data.length?.toString() || '',
-              ancho: data.width?.toString() || '',
-              alturaCanal: data.gutter_height?.toString() || '',
-              alturaTecho: data.roof_height?.toString() || '',
-              tieneVentanas: data.has_windows === 1,
-              numeroVentanas: data.window_count?.toString() || '',
-              anchoVentana: data.window_width?.toString() || '',
-              altoVentana: data.window_height?.toString() || '',
-              tieneLucarnas: data.has_skylights === 1,
-              numeroLucarnas: data.skylight_count?.toString() || '',
-              anchoLucarna: data.skylight_width?.toString() || '',
-              altoLucarna: data.skylight_height?.toString() || '',
-            });
-          }
-        } catch (error) {
-          console.error('Error al cargar datos del invernadero', error);
-        }
-      };
-      load();
-    }
+    if (!isEditMode) return;
+    getGreenhouseById(Number(id)).then(data => {
+      if (!data) return;
+      setForm({
+        nombre: data.name,
+        tipo: data.type,
+        materialCubierta: data.cover_material,
+        largo: data.length?.toString() || '',
+        ancho: data.width?.toString() || '',
+        alturaCanal: data.gutter_height?.toString() || '',
+        alturaTecho: data.roof_height?.toString() || '',
+        tieneVentanas: data.has_windows === 1,
+        numeroVentanas: data.window_count?.toString() || '',
+        anchoVentana: data.window_width?.toString() || '',
+        altoVentana: data.window_height?.toString() || '',
+        tieneLucarnas: data.has_skylights === 1,
+        numeroLucarnas: data.skylight_count?.toString() || '',
+        anchoLucarna: data.skylight_width?.toString() || '',
+        altoLucarna: data.skylight_height?.toString() || '',
+      });
+    });
   }, [id]);
 
-  const handleChange = (key: string, value: string | boolean) => {
-    setForm({ ...form, [key]: value });
-  };
+  const handleChange = (key: string, value: string | boolean) => setForm({ ...form, [key]: value });
+  const parse = (val: string) => parseFloat(val.replace(',', '.')) || 0;
 
-  const parseFloatSafe = (value: string) => parseFloat(value.replace(',', '.')) || 0;
-
-  const calcularSuperficieVentilacion = () => {
-    const largo = parseFloatSafe(form.largo);
-    const ancho = parseFloatSafe(form.ancho);
-    const areaTotal = largo * ancho;
-
-    const superficieVentanas =
-      parseFloatSafe(form.numeroVentanas) *
-      parseFloatSafe(form.anchoVentana) *
-      parseFloatSafe(form.altoVentana);
-
-    const superficieLucarnas =
-      parseFloatSafe(form.numeroLucarnas) *
-      parseFloatSafe(form.anchoLucarna) *
-      parseFloatSafe(form.altoLucarna);
-
-    const superficieTotal = superficieVentanas + superficieLucarnas;
-    const porcentaje = areaTotal > 0 ? (superficieTotal / areaTotal) * 100 : 0;
-
+  const calcVentilacion = () => {
+    const area = parse(form.largo) * parse(form.ancho);
+    const ventanas = parse(form.numeroVentanas) * parse(form.anchoVentana) * parse(form.altoVentana);
+    const lucarnas = parse(form.numeroLucarnas) * parse(form.anchoLucarna) * parse(form.altoLucarna);
+    const total = ventanas + lucarnas;
     return {
-      superficieTotal: superficieTotal.toFixed(2),
-      porcentaje: porcentaje.toFixed(2),
+      superficieTotal: total.toFixed(2),
+      porcentaje: area > 0 ? ((total / area) * 100).toFixed(2) : '0',
     };
   };
 
-  const { superficieTotal, porcentaje } = calcularSuperficieVentilacion();
+  const { superficieTotal, porcentaje } = calcVentilacion();
+
+  const handleSave = async () => {
+    try {
+      const data = { ...form, ventilation_area: superficieTotal, ventilation_percent: porcentaje };
+      if (isEditMode) {
+        await updateGreenhouseById(Number(id), data);
+        setSnackbarText('Invernadero actualizado ✅');
+      } else {
+        await insertGreenhouse(data);
+        setSnackbarText('Invernadero guardado ✅');
+      }
+      setVisible(true);
+      setTimeout(() => router.back(), 1500);
+    } catch (err) {
+      console.error('Error guardando invernadero:', err);
+      setSnackbarText('Error al guardar ❌');
+      setVisible(true);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 80 : 0}
-      >
-        <ScrollView className="p-4 space-y-4 bg-white">
-          <Text className="text-2xl font-bold mb-2">
-            {isEditMode ? 'Editar Invernadero' : 'Registrar Invernadero'}
-          </Text>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
+        <ScrollView className="p-4">
+          <Text className="text-2xl font-bold mb-2">{isEditMode ? 'Editar Invernadero' : 'Registrar Invernadero'}</Text>
 
-          <Input label="Nombre" value={form.nombre} onChangeText={(v) => handleChange('nombre', v)} />
-
-          <Text className="mb-2 text-base font-normal">Tipo de invernadero</Text>
-          <Dropdown
-            data={types}
-            labelField="label"
-            valueField="value"
-            placeholder="Selecciona el tipo..."
-            value={form.tipo}
-            onChange={item => handleChange('tipo', item.value)}
-            style={dropdownStyle}
-            placeholderStyle={placeholderStyle}
-            selectedTextStyle={selectedTextStyle}
-            containerStyle={containerStyle}
-          />
-
-          <Text className="mb-2 mt-2 text-base font-normal">Material de cubierta</Text>
-          <Dropdown
-            data={covers}
-            labelField="label"
-            valueField="value"
-            placeholder="Selecciona el material..."
-            value={form.materialCubierta}
-            onChange={item => handleChange('materialCubierta', item.value)}
-            style={dropdownStyle}
-            placeholderStyle={placeholderStyle}
-            selectedTextStyle={selectedTextStyle}
-            containerStyle={containerStyle}
-          />
-
-          <View className="mt-2">
-            <Text className="text-lg font-semibold mb-2">Dimensiones</Text>
-            <View className="flex-row gap-4">
-              <View className="flex-1">
-                <Input label="Largo (m)" keyboardType="numeric" value={form.largo} onChangeText={(v) => handleChange('largo', v)} />
-              </View>
-              <View className="flex-1">
-                <Input label="Ancho (m)" keyboardType="numeric" value={form.ancho} onChangeText={(v) => handleChange('ancho', v)} />
-              </View>
-            </View>
-            <View className="flex-row gap-4">
-              <View className="flex-1">
-                <Input label="Altura a la canal (m)" keyboardType="numeric" value={form.alturaCanal} onChangeText={(v) => handleChange('alturaCanal', v)} />
-              </View>
-              <View className="flex-1">
-                <Input label="Altura del techo (m)" keyboardType="numeric" value={form.alturaTecho} onChangeText={(v) => handleChange('alturaTecho', v)} />
-              </View>
-            </View>
-          </View>
-
-          <View className="flex-row justify-between items-center mt-4">
-            <Text className="text-lg font-semibold">¿Tiene ventanas?</Text>
-            <Switch value={form.tieneVentanas} onValueChange={(v) => handleChange('tieneVentanas', v)} />
-          </View>
+          <TextInputField label="Nombre" value={form.nombre} onChange={(v) => handleChange('nombre', v)} />
+          <DropdownSelector label="Tipo de invernadero" data={types.map(t => ({ label: t, value: t }))} value={form.tipo} onChange={(i) => handleChange('tipo', i.value)} />
+          <DropdownSelector label="Material de cubierta" data={covers.map(c => ({ label: c, value: c }))} value={form.materialCubierta} onChange={(i) => handleChange('materialCubierta', i.value)} />
+          
+          <SectionTitle>Dimensiones</SectionTitle>
+          <NumericInputField label="Largo (m)" value={form.largo} onChange={(v) => handleChange('largo', v)} />
+          <NumericInputField label="Ancho (m)" value={form.ancho} onChange={(v) => handleChange('ancho', v)} />
+          <NumericInputField label="Altura canal (m)" value={form.alturaCanal} onChange={(v) => handleChange('alturaCanal', v)} />
+          <NumericInputField label="Altura techo (m)" value={form.alturaTecho} onChange={(v) => handleChange('alturaTecho', v)} />
+          
+          <SectionTitle>Ventanas</SectionTitle>
+          <Switch value={form.tieneVentanas} onValueChange={(v) => handleChange('tieneVentanas', v)} />
           {form.tieneVentanas && (
-            <View className="mt-2">
-              <Text className="text-base font-normal mb-2">Ventanas</Text>
-              <View className="flex-row gap-4">
-                <View className="flex-1">
-                  <Input label="N°" keyboardType="numeric" value={form.numeroVentanas} onChangeText={(v) => handleChange('numeroVentanas', v)} />
-                </View>
-                <View className="flex-1">
-                  <Input label="Ancho (m)" keyboardType="numeric" value={form.anchoVentana} onChangeText={(v) => handleChange('anchoVentana', v)} />
-                </View>
-                <View className="flex-1">
-                  <Input label="Alto (m)" keyboardType="numeric" value={form.altoVentana} onChangeText={(v) => handleChange('altoVentana', v)} />
-                </View>
-              </View>
-            </View>
+            <>
+              <NumericInputField label="N°" value={form.numeroVentanas} onChange={(v) => handleChange('numeroVentanas', v)} />
+              <NumericInputField label="Ancho (m)" value={form.anchoVentana} onChange={(v) => handleChange('anchoVentana', v)} />
+              <NumericInputField label="Alto (m)" value={form.altoVentana} onChange={(v) => handleChange('altoVentana', v)} />
+            </>
           )}
 
-          <View className="flex-row justify-between items-center mt-4">
-            <Text className="text-lg font-semibold">¿Tiene lucarnas?</Text>
-            <Switch value={form.tieneLucarnas} onValueChange={(v) => handleChange('tieneLucarnas', v)} />
-          </View>
+          <SectionTitle>Lucarnas</SectionTitle>
+          <Switch value={form.tieneLucarnas} onValueChange={(v) => handleChange('tieneLucarnas', v)} />
           {form.tieneLucarnas && (
-            <View className="mt-2">
-              <Text className="text-base font-normal mb-2">Lucarnas</Text>
-              <View className="flex-row gap-4">
-                <View className="flex-1">
-                  <Input label="N°" keyboardType="numeric" value={form.numeroLucarnas} onChangeText={(v) => handleChange('numeroLucarnas', v)} />
-                </View>
-                <View className="flex-1">
-                  <Input label="Ancho (m)" keyboardType="numeric" value={form.anchoLucarna} onChangeText={(v) => handleChange('anchoLucarna', v)} />
-                </View>
-                <View className="flex-1">
-                  <Input label="Alto (m)" keyboardType="numeric" value={form.altoLucarna} onChangeText={(v) => handleChange('altoLucarna', v)} />
-                </View>
-              </View>
-            </View>
+            <>
+              <NumericInputField label="N°" value={form.numeroLucarnas} onChange={(v) => handleChange('numeroLucarnas', v)} />
+              <NumericInputField label="Ancho (m)" value={form.anchoLucarna} onChange={(v) => handleChange('anchoLucarna', v)} />
+              <NumericInputField label="Alto (m)" value={form.altoLucarna} onChange={(v) => handleChange('altoLucarna', v)} />
+            </>
           )}
 
           {/* <View className="bg-gray-100 p-4 rounded-xl mt-6">
@@ -220,88 +153,15 @@ export default function GreenhouseForm() {
           </View> */}
         </ScrollView>
 
-        <View className="absolute bottom-6 left-0 right-0 items-center">
-          <Pressable
-            onPress={async () => {
-              try {
-                const greenhouseToSave = {
-                  ...form,
-                  ventilation_area: superficieTotal,
-                  ventilation_percent: porcentaje,
-                };
+        <Pressable onPress={handleSave} className="m-6 bg-green-600 rounded-full py-4 items-center flex-row justify-center gap-2">
+          <Ionicons name="checkmark-circle-outline" size={20} color="white" />
+          <Text className="text-white font-bold text-base">{isEditMode ? 'Actualizar' : 'Guardar'}</Text>
+        </Pressable>
 
-                if (isEditMode) {
-                  await updateGreenhouseById(Number(id), greenhouseToSave);
-                  setSnackbarText('Invernadero actualizado ✅');
-                } else {
-                  await insertGreenhouse(greenhouseToSave);
-                  setSnackbarText('Invernadero guardado ✅');
-                }
-
-                setSnackbarVisible(true);
-                setTimeout(() => router.back(), 1500);
-              } catch (error) {
-                console.error('Error al guardar el invernadero:', error);
-                setSnackbarText('Error al guardar el invernadero ❌');
-                setSnackbarVisible(true);
-              }
-            }}
-            className="flex-row items-center gap-2 bg-green-600 px-6 py-4 rounded-full shadow-lg"
-            android_ripple={{ color: '#ffffff30', borderless: false }}
-          >
-            <Ionicons name="checkmark-circle-outline" size={20} color="white" />
-            <Text className="text-white font-bold text-base">
-              {isEditMode ? 'Actualizar' : 'Guardar'}
-            </Text>
-          </Pressable>
-        </View>
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={() => setSnackbarVisible(false)}
-          duration={2000}
-          action={{ label: 'OK', onPress: () => setSnackbarVisible(false) }}
-          style={{ backgroundColor: snackbarText.includes('Error') ? 'red' : 'green' }}
-        >
+        <Snackbar visible={visible} onDismiss={() => setVisible(false)} duration={2000} action={{ label: 'OK', onPress: () => setVisible(false) }} style={{ backgroundColor: snackbarText.includes('Error') ? 'red' : 'green' }}>
           {snackbarText}
         </Snackbar>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-function Input({
-  label,
-  value,
-  onChangeText,
-  keyboardType = 'default',
-}: {
-  label: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  keyboardType?: 'default' | 'numeric';
-}) {
-  return (
-    <View className="space-y-1 mb-4 min-w-0">
-      <Text className="text-base">{label}</Text>
-      <TextInput
-        className="border border-gray-300 rounded-md px-3 py-2"
-        value={value}
-        onChangeText={onChangeText}
-        keyboardType={keyboardType}
-      />
-    </View>
-  );
-}
-
-const dropdownStyle = {
-  borderWidth: 1,
-  borderColor: 'gray',
-  borderRadius: 8,
-  paddingHorizontal: 10,
-  paddingVertical: 10,
-  backgroundColor: '#fff',
-};
-
-const placeholderStyle = { color: 'gray', fontSize: 14 };
-const selectedTextStyle = { fontSize: 14, color: 'black' };
-const containerStyle = { borderRadius: 8 };

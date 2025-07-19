@@ -3,7 +3,7 @@ import { vpdRanges } from "@/store/vpdRanges";
 export function calculateVPD(temperature: number, humidity: number): number {
   const es = 0.6108 * Math.exp((17.27 * temperature) / (temperature + 237.3));
   const ea = es * (humidity / 100);
-  return parseFloat((es - ea).toFixed(3));
+  return parseFloat((es - ea).toFixed(2));
 }
 
 export function getVPDStatus(vpd: number, crop: string): string {
