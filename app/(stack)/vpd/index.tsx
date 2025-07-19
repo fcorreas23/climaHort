@@ -21,7 +21,8 @@ export default function VPDCalculatorScreen() {
   const [soilmoisture, setSoilMoisture] = useState('');
   const [greenhouses, setGreenhouses] = useState<any[]>([]);
   const [selectedGreenhouse, setSelectedGreenhouse] = useState<any | null>(null);
-  const [result, setResult] = useState('');
+  const [status, setStatus] = useState('');
+  const [diagnosis, setDiagnosis] = useState('');
   const [vpd, setVpd] = useState<number | null>(null);
   
   
@@ -32,20 +33,21 @@ export default function VPDCalculatorScreen() {
 
 
   const handleCalculate = () => {
-    const { vpd, status, error } = runFullDiagnosis(temp, humidity, soilmoisture, crop, selectedGreenhouse);
+    const { vpd, status, message, error } = runFullDiagnosis(temp, humidity, soilmoisture, crop, selectedGreenhouse);
     if (error) {
-      setResult(error);
+      setDiagnosis(error);
       setVpd(null);
       return;
     }
     setVpd(vpd!);
-    setResult(status ?? '');
+    setStatus(status?? '');
+    setDiagnosis(message ?? '');
 
   };
 
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
       <ScrollView contentContainerStyle={{ padding: 12 }}>
         <Text className="text-2xl font-bold text-center mb-6">Calculadora de VPD</Text>   
         
@@ -62,16 +64,16 @@ export default function VPDCalculatorScreen() {
           <Text className="text-white font-bold text-lg">Calcular VPD</Text>
         </Pressable>
 
-        {result !== '' && vpd === null && (
+        {diagnosis !== '' && vpd === null && (
           <View className="mt-6 bg-red-100 border border-red-300 rounded p-4">
-            <Text className="text-red-700">{result}</Text>
+            <Text className="text-red-700">{diagnosis}</Text>
           </View>
         )}
 
         {vpd !== null && (
-          <View className={`mt-6 p-4 rounded border ${getStatusColorClass(result)}`}>
-            <Text className="text-3xl font-semibold">🌡️ VPD: {vpd} kPa</Text>
-            <Text className="mt-1">Estado: {result}</Text>
+          <View className={`mt-6 p-4 rounded border ${getStatusColorClass(status)}`}>
+            <Text className="text-4xl font-semibold">🌡️ VPD: {vpd} kPa</Text>
+            <Text className="mt-1 text-2xl">{diagnosis}</Text>
           </View>
       )}
       </ScrollView>
@@ -80,9 +82,8 @@ export default function VPDCalculatorScreen() {
 }
 
 function getStatusColorClass(status: string) {
-  if (status.includes('Óptimo')) return 'bg-green-100 text-green-800 border-green-300';
-  if (status.includes('Estrés')) return 'bg-red-100 text-red-800 border-red-300';
-  if (status.includes('Aceptable')) return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-  if (status.includes('Muy bajo')) return 'bg-blue-100 text-blue-800 border-blue-300';
+  if (status === 'optimal') return 'bg-green-100 text-green-800 border-green-300';
+  if (status === 'low' || status === 'high') return 'bg-red-100 text-red-800 border-red-300';
+  if (status === 'acceptable') return 'bg-yellow-100 text-yellow-800 border-yellow-300';
   return 'bg-gray-100 text-gray-800 border-gray-300';
 }

@@ -17,7 +17,7 @@ const StackLayout = () => {
         />
         <Stack.Screen 
           name="greenhouse/index" 
-          options={{ title: 'Invernaderos' }} 
+          options={{ title: 'Mis Invernaderos' }} 
         />
         <Stack.Screen 
           name="greenhouse/form" 
@@ -26,6 +26,10 @@ const StackLayout = () => {
         <Stack.Screen 
           name="history/index" 
           options={{ title: 'History' }} 
+        />
+        <Stack.Screen 
+          name="crop-guide/index" 
+          options={{ title: 'Guía de Cultivos' }}
         />
 
         

@@ -1,32 +1,39 @@
 import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { Asset } from 'expo-asset';
 import { useCallback, useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
-import { initDB } from '@/database/db'; // Ajusta según tu estructura
-import "../global.css";
 import { View } from 'react-native';
+import { initDB } from '@/database/db';
 
-// Mantiene visible el splash mientras se carga
+import "../global.css";
+
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
-  
   const [loaded, error] = useFonts({
     "ubuntu-bold": require("../assets/fonts/Ubuntu-Bold.ttf"),
     "ubuntu-light": require("../assets/fonts/Ubuntu-Light.ttf"),
     "ubuntu-medium": require("../assets/fonts/Ubuntu-Medium.ttf"),
     "ubuntu-regular": require("../assets/fonts/Ubuntu-Regular.ttf"),
   });
+
+  const [assetsReady, setAssetsReady] = useState(false);
   const [dbReady, setDbReady] = useState(false);
 
   useEffect(() => {
     const prepare = async () => {
       try {
-        await initDB(); // Inicializa SQLite
+        await initDB(); // carga la base de datos
+
+        // precarga la imagen de fondo
+        await Asset.loadAsync([require("../assets/images/home.jpg")]);
+
+        setAssetsReady(true);
         setDbReady(true);
       } catch (e) {
-        console.error("Error initializing DB:", e);
+        console.error("Error en carga inicial:", e);
       }
     };
 
@@ -34,12 +41,12 @@ const RootLayout = () => {
   }, []);
 
   const onLayoutRootView = useCallback(() => {
-    if (loaded && dbReady) {
+    if (loaded && assetsReady && dbReady) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, dbReady]);
+  }, [loaded, assetsReady, dbReady]);
 
-  if (!loaded || !dbReady) return null;
+  if (!loaded || !assetsReady || !dbReady) return null;
 
   return (
     <PaperProvider>
@@ -48,6 +55,6 @@ const RootLayout = () => {
       </View>
     </PaperProvider>
   );
-}
+};
 
-export default RootLayout
+export default RootLayout;
