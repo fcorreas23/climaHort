@@ -13,7 +13,6 @@ export default function NumericInputField({ label, value, onChange }: {
         value={value}
         onChangeText={onChange}
         className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
-        placeholder="%"
       />
     </View>
   );

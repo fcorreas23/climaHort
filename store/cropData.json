@@ -1,0 +1,44 @@
+[
+  {
+    "icon": "🍅",
+    "name": "Tomate",
+    "vpd": "0.8 – 1.2 kPa",
+    "advice": "Evita humedad alta en floración. Ventilación moderada."
+  },
+  {
+    "icon": "🥬",
+    "name": "Lechuga",
+    "vpd": "0.6 – 1.0 kPa",
+    "advice": "Prefiere alta humedad y sombra ligera."
+  },
+  {
+    "icon": "🫑",
+    "name": "Pimiento",
+    "vpd": "0.9 – 1.3 kPa",
+    "advice": "Evita VPD alto durante floración para prevenir caída floral."
+  },
+  {
+    "icon": "🍓",
+    "name": "Frutilla",
+    "vpd": "0.8 – 1.1 kPa",
+    "advice": "Ambiente equilibrado. Evita exceso de humedad."
+  },
+  {
+    "icon": "🌿",
+    "name": "Albahaca",
+    "vpd": "0.9 – 1.2 kPa",
+    "advice": "Tolera calor, pero no humedad excesiva."
+  },
+  {
+    "icon": "🥬",
+    "name": "Espinaca",
+    "vpd": "0.6 – 1.0 kPa",
+    "advice": "Prefiere clima fresco y humedad media-alta."
+  },
+  {
+    "icon": "🍈",
+    "name": "Melón",
+    "vpd": "1.0 – 1.4 kPa",
+    "advice": "Requiere buena ventilación. Tolera VPD más alto."
+  }
+]

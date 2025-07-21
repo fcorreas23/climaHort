@@ -47,7 +47,7 @@ export default function VPDCalculatorScreen() {
 
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ padding: 12 }}>
         <Text className="text-2xl font-bold text-center mb-6">Calculadora de VPD</Text>   
         

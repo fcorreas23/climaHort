@@ -18,37 +18,34 @@ export default function index () {
         <Text className="text-white text-3xl font-bold mb-12 text-center">
           Bienvenido a la App
         </Text>
-
-        <Pressable
-          className="w-64 py-6 bg-green-500 rounded-full mb-12 items-center"
-          onPress={() => router.push("/greenhouse")}
-        >
-          <Text className="text-white font-bold text-lg">INVERNADEROS</Text>
-        </Pressable>
-        
+        {/* VPD */}
         <Pressable
           className="w-64 py-6 bg-blue-500 rounded-full mb-12 items-center"
           onPress={() => router.push("/vpd")}
           
         >
-          <Text className="text-white font-bold text-lg">VPD</Text>
+          <Text className="text-white font-bold text-lg">CALCULADORA</Text>
         </Pressable>
-
-        
-        
-
+        {/* Invernaderos */}
+        <Pressable
+          className="w-64 py-6 bg-green-500 rounded-full mb-12 items-center"
+          onPress={() => router.push("/greenhouse")}
+        >
+          <Text className="text-white font-bold text-lg">MIS INVERNADEROS</Text>
+        </Pressable>
+        {/* Historial */}
         <Pressable
           className="w-64 py-6 bg-orange-500 rounded-full mb-12 items-center"
           onPress={() => router.push("/history")}
         >
           <Text className="text-white font-bold text-lg">HISTORIAL</Text>
         </Pressable>
-        
+        {/* Guía de Cultivos */}        
         <Pressable
           className="w-64 py-6 bg-purple-500 rounded-full items-center"
           onPress={() => router.push('/crop-guide')}
         >
-          <Text className="text-white font-bold text-lg">GUÍA DE CULTIVOS</Text>
+          <Text className="text-white font-bold text-lg">INFORMACION</Text>
         </Pressable>
 
       </Animated.View>
