@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 export default function index () {
   return (
     <ImageBackground
-      source={require('@/assets/images/home.jpg')}
+      source={require('@/assets/images/grennhouse.jpg')}
       resizeMode="cover"
       className="flex-1 justify-center items-center"
     >

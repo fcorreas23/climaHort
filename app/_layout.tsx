@@ -28,7 +28,7 @@ const RootLayout = () => {
         await initDB(); // carga la base de datos
 
         // precarga la imagen de fondo
-        await Asset.loadAsync([require("../assets/images/home.jpg")]);
+        await Asset.loadAsync([require("../assets/images/grennhouse.jpg")]);
 
         setAssetsReady(true);
         setDbReady(true);

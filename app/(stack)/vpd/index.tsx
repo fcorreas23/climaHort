@@ -7,7 +7,7 @@ import {
   Text,  
   View 
 } from 'react-native';
-import { getGreenhouses } from '@/database/repository/greenhouseRepository';
+import { getGreenhouses, insertVPDRecord } from '@/database/repository/greenhouseRepository';
 import { vpdRanges } from "@/store/vpdRanges";
 import DropdownSelector from '@/components/DropdownSelector';
 import NumericInputField from '@/components/NumericInputField';
@@ -72,8 +72,29 @@ export default function VPDCalculatorScreen() {
 
         {vpd !== null && (
           <View className={`mt-6 p-4 rounded border ${getStatusColorClass(status)}`}>
-            <Text className="text-4xl font-semibold">🌡️ VPD: {vpd} kPa</Text>
+            <Text className="text-4xl font-semibold mb-2">VPD: {vpd} kPa</Text>
             <Text className="mt-1 text-2xl">{diagnosis}</Text>
+            <Pressable
+              onPress={async () => {
+                try {
+                  await insertVPDRecord({
+                    greenhouse_id: selectedGreenhouse.id,
+                    timestamp: Date.now(),
+                    temperature: parseFloat(temp),
+                    humidity: parseFloat(humidity),
+                    soil_moisture: parseFloat(soilmoisture),
+                    vpd: vpd,
+                  });
+                  alert('✅ Diagnóstico guardado correctamente.');
+                } catch (e) {
+                  console.error(e);
+                  alert('❌ Ocurrió un error al guardar.');
+                }
+              }}
+              className="bg-green-600 p-3 mt-4 rounded-xl"
+            >
+              <Text className="text-white text-center font-semibold">Guardar diagnóstico</Text>
+            </Pressable>
           </View>
       )}
       </ScrollView>

@@ -29,7 +29,7 @@ const StackLayout = () => {
         />
         <Stack.Screen 
           name="crop-guide/index" 
-          options={{ title: 'Guía de Cultivos' }}
+          options={{ title: 'Información' }}
         />
 
         

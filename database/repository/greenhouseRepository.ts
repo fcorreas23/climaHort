@@ -1,5 +1,16 @@
 import { getDB } from '../db';
 
+
+export type VPDRecord = {
+  id?: number;
+  greenhouse_id: number;
+  timestamp: number;
+  temperature: number;
+  humidity: number;
+  soil_moisture: number;
+  vpd: number;
+};
+
 export const insertGreenhouse = async (greenhouse: any): Promise<void> => {
   const db = getDB();
 
@@ -88,3 +99,39 @@ export const updateGreenhouseById = async (id: number, greenhouse: any): Promise
   );
 };
 
+// Guardar un nuevo diagnóstico de VPD
+export const insertVPDRecord = async (record: VPDRecord): Promise<void> => {
+  const db = getDB();
+  await db.runAsync(
+    `INSERT INTO vpd_records 
+     (greenhouse_id, timestamp, temperature, humidity, soil_moisture, vpd) 
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [
+      record.greenhouse_id,
+      record.timestamp,
+      record.temperature,
+      record.humidity,
+      record.soil_moisture,
+      record.vpd,
+    ]
+  );
+};
+
+// Obtener todos los registros por invernadero (ordenados por fecha descendente)
+export const getVPDRecordsByGreenhouseId = async (greenhouseId: number): Promise<VPDRecord[]> => {
+  const db = getDB();
+  const results = await db.getAllAsync(
+    `SELECT * FROM vpd_records WHERE greenhouse_id = ? ORDER BY timestamp DESC`,
+    [greenhouseId]
+  );
+  return results as VPDRecord[];
+};
+
+// (Opcional) Eliminar todos los registros de un invernadero si este se borra
+export const deleteVPDRecordsByGreenhouseId = async (greenhouseId: number): Promise<void> => {
+  const db = getDB();
+  await db.runAsync(
+    `DELETE FROM vpd_records WHERE greenhouse_id = ?`,
+    [greenhouseId]
+  );
+};

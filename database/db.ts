@@ -28,6 +28,19 @@ export const initDB = async () => {
       ventilation_percent REAL
     );
   `);
+
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS vpd_records (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      greenhouse_id INTEGER NOT NULL,
+      timestamp INTEGER NOT NULL,
+      temperature REAL NOT NULL,
+      humidity REAL NOT NULL,
+      soil_moisture REAL NOT NULL,
+      vpd REAL NOT NULL,
+      FOREIGN KEY (greenhouse_id) REFERENCES greenhouses(id) ON DELETE CASCADE
+    );
+  `);
 };
 
 export const getDB = (): SQLiteDatabase => {

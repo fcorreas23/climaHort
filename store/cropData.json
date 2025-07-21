@@ -1,5 +1,33 @@
 [
   {
+    "icon": "🌱",
+    "name": "Acelga",
+    "vpd": "0.8 kPa",
+    "advice": "Mantén un ambiente equilibrado. Evita extremos de humedad."
+
+  },
+  {
+    "icon": "🌱",
+    "name": "Ajo",
+    "vpd": "0.8 kPa",
+    "advice": "Mantén un ambiente equilibrado. Evita extremos de humedad."
+
+  },
+  {
+    "icon": "🌱",
+    "name": "Betarraga",
+    "vpd": "0.9 kPa",
+    "advice": "Mantén un ambiente equilibrado. Evita extremos de humedad."
+
+  },
+  {
+    "icon": "🌱",
+    "name": "Cilantro",
+    "vpd": "0.7 kPa",
+    "advice": "Mantén un ambiente equilibrado. Evita extremos de humedad."
+
+  },
+  {
     "icon": "🍅",
     "name": "Tomate",
     "vpd": "0.8 – 1.2 kPa",
