@@ -50,15 +50,16 @@ const VPDInfo = () => (
 
 const CropGuide = () => (
     <ScrollView className="p-4 bg-white">
-        <Text className="text-xl font-bold mb-2">🌱 Guía por Cultivo</Text>
+        {/* <Text className="text-xl font-bold mb-2">🌱 Guía por Cultivo</Text> */}
 
         {cropData.map((crop, index) => (
             <CropCard
-                key={index}
-                icon={crop.icon}
-                name={crop.name}
-                vpd={crop.vpd}
-                advice={crop.advice}
+                key={ index }
+                icon={ crop.icon }
+                name={ crop.name }
+                vpd_optimal={ crop.vpd_optimal }
+                vpd_acceptable={ crop.vpd_acceptable }
+                advice={ crop.advice }
             />
         ))}
 
@@ -78,7 +79,7 @@ export default function InfoScreen() {
     const [index, setIndex] = useState(0);
     const [routes] = useState([
         { key: 'vpd', title: 'VPD' },
-        { key: 'crops', title: 'Cultivos' },
+        { key: 'crops', title: 'Guía por Cultivo' },
     ]);
 
     return (

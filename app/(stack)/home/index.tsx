@@ -43,7 +43,7 @@ export default function index () {
         {/* Guía de Cultivos */}        
         <Pressable
           className="w-64 py-6 bg-purple-500 rounded-full items-center"
-          onPress={() => router.push('/crop-guide')}
+          onPress={() => router.push('/info')}
         >
           <Text className="text-white font-bold text-lg">INFORMACION</Text>
         </Pressable>

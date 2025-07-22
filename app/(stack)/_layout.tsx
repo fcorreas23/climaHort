@@ -28,7 +28,7 @@ const StackLayout = () => {
           options={{ title: 'History' }} 
         />
         <Stack.Screen 
-          name="crop-guide/index" 
+          name="info/index" 
           options={{ title: 'Información' }}
         />
 
