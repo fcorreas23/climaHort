@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "inia-app",
-    "slug": "inia-app",
+    "slug": "vpd-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.fcorreas.iniaapp"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +39,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0442fd7b-e4de-4b21-a99a-bd0eec42367d"
+      }
+    },
+    "owner": "fcorreas"
   }
 }
