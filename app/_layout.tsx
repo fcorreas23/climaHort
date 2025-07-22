@@ -29,6 +29,8 @@ const RootLayout = () => {
 
         // precarga la imagen de fondo
         await Asset.loadAsync([require("../assets/images/grennhouse.jpg")]);
+        await Asset.loadAsync([require("../assets/images/corfo-icono.jpg")]);
+        await Asset.loadAsync([require("../assets/images/inia-logo.jpg")]);
 
         setAssetsReady(true);
         setDbReady(true);

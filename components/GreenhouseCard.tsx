@@ -30,7 +30,7 @@ export default function GreenhouseCard({ item }: { item: any }) {
       <View className="flex-row justify-between items-center mb-2">
         <Text className="text-2xl font-bold">{item.name}</Text>
 
-        <View className="flex-row space-x-6">
+        <View className="flex-row gap-x-6">
           <Pressable
             onPress={() => router.push(`/(stack)/greenhouse/form?id=${item.id}`)}
             className="w-9 h-9 bg-blue-500 rounded-full items-center justify-center"

@@ -55,9 +55,9 @@ export default function VPDCalculatorScreen() {
         <DropdownSelector label="Cultivo" data={vpdRanges.map(c => ({ label: c.crop, value: c.crop }))} value={crop} onChange={item => setCrop(item.value)} />
         
 
-        <NumericInputField label="Temperatura (°C)" value={temp} onChange={setTemp} />
-        <NumericInputField label="Humedad Relativa (%)" value={humidity} onChange={setHumidity} />
-        <NumericInputField label="Humedad del Suelo (%)" value={soilmoisture} onChange={setSoilMoisture} />
+        <NumericInputField label="Temperatura ambiental (°C)" value={temp} onChange={setTemp} />
+        <NumericInputField label="Humedad relativa (%)" value={humidity} onChange={setHumidity} />
+        <NumericInputField label="Humedad del suelo (%)" value={soilmoisture} onChange={setSoilMoisture} />
 
 
         <Pressable  onPress={handleCalculate} className="mt-6 bg-green-600 py-4 rounded-lg items-center">

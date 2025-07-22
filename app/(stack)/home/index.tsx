@@ -1,5 +1,6 @@
 import React from 'react';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
+import { Image } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 
@@ -49,6 +50,18 @@ export default function index () {
         </Pressable>
 
       </Animated.View>
+      <View className="absolute bottom-6 w-full items-center px-4">
+        <View className="bg-white/70 rounded-lg px-4 py-2 flex-row items-center justify-center gap-x-8">
+          <Image
+            source={require('@/assets/images/corfo-icono.jpg')}
+            style={{ width: 100, height: 100, resizeMode: 'contain' }}
+          />
+          <Image
+            source={require('@/assets/images/inia-logo.jpg')}
+            style={{ width: 100, height: 100, resizeMode: 'contain' }}
+          />
+        </View>
+      </View>
     </ImageBackground>
   );
 }
