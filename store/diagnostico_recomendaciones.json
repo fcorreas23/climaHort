@@ -1,0 +1,86 @@
+[
+  {
+    "vpd":"Bajo",
+    "humedad_suelo":"Saturación",
+    "diagnostico":"✅ Suelo muy húmedo y baja demanda atmosférica. Condición estable momentáneamente.",
+    "recomendacion":"Evita riegos. Mejora ventilación para evitar enfermedades.",
+    "riesgo_patogenos":"Alto"
+  },
+  {
+    "vpd":"Bajo",
+    "humedad_suelo":"Óptima",
+    "diagnostico":"⚠️ Agua en suelo adecuada, pero baja transpiración. Riesgo de acumulación de humedad.",
+    "recomendacion":"Aumenta ventilación o control de HR. Mantén monitoreo frecuente.",
+    "riesgo_patogenos":"Moderado"
+  },
+  {
+    "vpd":"Bajo",
+    "humedad_suelo":"Estrés hídrico",
+    "diagnostico":"🟠 Baja demanda, pero humedad insuficiente para mantener confort hídrico del cultivo.",
+    "recomendacion":"Monitorear. Podrías regar si la tendencia de HR sube.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Óptimo",
+    "humedad_suelo":"Óptima",
+    "diagnostico":"✅ Equilibrio perfecto entre demanda ambiental y disponibilidad de agua.",
+    "recomendacion":"Mantén prácticas actuales. Riego adecuado.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Óptimo",
+    "humedad_suelo":"Estrés hídrico",
+    "diagnostico":"🟠 Condiciones externas ideales, pero agua insuficiente en el suelo.",
+    "recomendacion":"Riego ligero recomendado para evitar estrés futuro.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Óptimo",
+    "humedad_suelo":"Saturación",
+    "diagnostico":"⚠️ Condiciones atmosféricas ideales pero exceso de agua en el suelo.",
+    "recomendacion":"Reduce frecuencia o volumen de riego. Verifica drenaje.",
+    "riesgo_patogenos":"Moderado"
+  },
+  {
+    "vpd":"Aceptable",
+    "humedad_suelo":"Óptima",
+    "diagnostico":"✅ VPD aceptable y suelo en rango óptimo. Condiciones funcionales, pero no ideales.",
+    "recomendacion":"Mantén prácticas actuales. Riego adecuado.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Aceptable",
+    "humedad_suelo":"Estrés hídrico",
+    "diagnostico":"🟠 VPD aceptable pero suelo seco. Posible estrés si continúa la pérdida de agua.",
+    "recomendacion":"Riego ligero recomendado para evitar estrés futuro.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Aceptable",
+    "humedad_suelo":"Saturación",
+    "diagnostico":"⚠️ VPD aceptable pero suelo muy húmedo. Vigila evaporación excesiva o condensación.",
+    "recomendacion":"Reduce frecuencia o volumen de riego. Verifica drenaje.",
+    "riesgo_patogenos":"Moderado"
+  },
+  {
+    "vpd":"Alto",
+    "humedad_suelo":"Estrés hídrico",
+    "diagnostico":"🚨 Demanda atmosférica alta y poca humedad en el suelo. Alto riesgo de marchitez.",
+    "recomendacion":"Riego urgente. Usar acolchados si es posible.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Alto",
+    "humedad_suelo":"Óptima",
+    "diagnostico":"🟡 Agua disponible en suelo es adecuada, pero demanda es alta.",
+    "recomendacion":"Riego más frecuente. Monitorear estrés térmico.",
+    "riesgo_patogenos":"Bajo"
+  },
+  {
+    "vpd":"Alto",
+    "humedad_suelo":"Saturación",
+    "diagnostico":"🟠 Mucha agua en el suelo y alta temperatura. Riesgo fisiológico y pobre oxigenación.",
+    "recomendacion":"Evitar riegos. Revisar sistema de drenaje. Controlar transpiración.",
+    "riesgo_patogenos":"Moderado"
+  }
+]

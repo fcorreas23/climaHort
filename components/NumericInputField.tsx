@@ -1,19 +1,25 @@
-import { View, Text, TextInput } from 'react-native';
 
-export default function NumericInputField({ label, value, onChange }: {
+import React from 'react';
+import { Text, TextInput, View } from 'react-native';
+
+interface Props {
   label: string;
   value: string;
-  onChange: (val: string) => void;
-}) {
+  onChange: (value: string) => void;
+  error?: string;
+}
+
+export default function NumericInputField({ label, value, onChange, error }: Props) {
   return (
-    <View className="flex-row items-center justify-between mb-4">
-      <Text className="text-xl font-bold">{label}</Text>
+    <View className={`mb-4 ${error ? 'border border-red-500 rounded' : ''}`}>
+      <Text className="font-medium mb-1">{label}</Text>
       <TextInput
         keyboardType="numeric"
         value={value}
         onChangeText={onChange}
-        className="w-28 h-14 border border-gray-400 rounded-md px-4 text-right text-xl"
+        className={`bg-white px-3 py-2 border rounded ${error ? 'border-red-500' : 'border-gray-300'}`}
       />
+      {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
     </View>
   );
 }
