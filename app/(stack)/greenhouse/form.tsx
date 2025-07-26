@@ -1,12 +1,12 @@
-import { 
-  View, 
-  Text, 
-  Switch, 
-  ScrollView, 
-  Pressable, 
-  KeyboardAvoidingView, 
-  Platform, 
-  SafeAreaView 
+import {
+  View,
+  Text,
+  Switch,
+  ScrollView,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -28,7 +28,7 @@ export default function GreenhouseForm() {
   const { id } = useLocalSearchParams();
   const isEditMode = !!id;
   const router = useRouter();
-  
+
   const [snackbarText, setSnackbarText] = useState('');
   const [visible, setVisible] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -92,11 +92,11 @@ export default function GreenhouseForm() {
       porcentaje: area > 0 ? ((total / area) * 100).toFixed(2) : '0',
     };
   };
-    
+
   const handleChange = (key: string, value: string | boolean) => setForm({ ...form, [key]: value });
-  
+
   const handleSave = async () => {
-    
+
     const newErrors: any = {};
     if (!form.nombre) newErrors.nombre = 'Nombre requerido';
     if (!form.largo || isNaN(Number(form.largo))) newErrors.largo = 'Debe ser un número';
@@ -138,7 +138,7 @@ export default function GreenhouseForm() {
     }
   };
 
-   return (
+  return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <SectionTitle>🛠️ Información general</SectionTitle>
@@ -178,7 +178,7 @@ export default function GreenhouseForm() {
           </>
         )}
 
-        
+
         {form.largo && form.ancho && (
           <View className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
             <Text className="text-base font-semibold mb-1 text-blue-700">💨 Cálculo de ventilación</Text>

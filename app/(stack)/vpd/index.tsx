@@ -14,6 +14,7 @@ import DropdownSelector from '@/components/DropdownSelector';
 import NumericInputField from '@/components/NumericInputField';
 import { calculateVPD, getVPDStatus } from '@/utils/vpdUtils';
 import { getSoilMeasureStatus } from '@/utils/soilUtils';
+import { getVentilationAdvice } from '@/utils/ventilationUtils';
 import { getDiagnostic } from '@/utils/diagnostic'
 
 export default function VPDCalculatorScreen() {
@@ -130,15 +131,25 @@ export default function VPDCalculatorScreen() {
               <>
                 <Text className="text-xl font-bold text-center mb-2">📊 Diagnóstico</Text>
                 <Text className="text-4xl font-extrabold text-center text-gray-800 mb-2">VPD: {vpd?.toFixed(2)}</Text>
-                <Text className="text-base text-center mb-2 text-gray-700">{diagnostico.mensaje}</Text>
-                <Text className="text-sm text-center mb-2 text-gray-600">{diagnostico.recomendacion}</Text>
+                <Text className="text-lg text-center mb-2 text-gray-700">{diagnostico.mensaje}</Text>
+                <Text className="text-lg text-center mb-4 text-gray-600">{diagnostico.recomendacion}</Text>
                 {diagnostico.patogenos && (
-                  <Text className={`text-sm text-center ${diagnostico.patogenos === 'Alto' ? 'text-red-600' : 'text-yellow-600'}`}>
-                    🧫 Riesgo de patógenos: {diagnostico.patogenos}
+                  <Text className={`text-lg text-center ${diagnostico.patogenos === 'Alto' ? 'text-red-600' : 'text-yellow-600'}`}>
+                    🦠 Riesgo de patógenos: {diagnostico.patogenos}
                   </Text>
                 )}
               </>
             )}
+            {selectedGreenhouse && (
+              <View className="mt-4">
+                <Text className="text-lg text-center text-blue-800 font-medium">
+                  La ventilación del invernadero es de: {selectedGreenhouse.ventilation_percent}%
+                </Text>
+                <Text className="text-lg text-center text-gray-700">
+                  {getVentilationAdvice(selectedGreenhouse.ventilation_percent, selectedGreenhouse.has_skylights)}
+                </Text>
+              </View>
+            )} 
 
             {/* Botón Guardar */}
             <Pressable
