@@ -74,7 +74,7 @@ export default function VPDCalculatorScreen() {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <Text className="text-2xl font-bold text-center mb-6 text-green-700">🌿 Calculadora</Text>
+        {/* <Text className="text-2xl font-bold text-center mb-6 text-green-700">🌿 Calculadora</Text> */}
 
         {/*<Text className="text-xl font-semibold mb-2 text-gray-700">📍 Datos del invernadero</Text>*/}
         <DropdownSelector

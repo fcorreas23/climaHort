@@ -1,72 +1,88 @@
 import React from 'react';
-import { ImageBackground, Pressable, Text, View } from 'react-native';
-import { Image } from 'react-native';
+import { ImageBackground, Pressable, SafeAreaView, Text, View, Image, Platform } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 
-export default function index () {
+export default function index() {
   return (
     <ImageBackground
       source={require('@/assets/images/invernadero.jpeg')}
       resizeMode="cover"
       className="flex-1 justify-center items-center"
     >
-      {/* TÍTULO PRINCIPAL */}
-      <View className="mb-6 bg-black/60 px-6 py-4 rounded-xl items-center">
-        <Text className="text-white text-5xl font-extrabold text-center">🌿 ClimaHort</Text>
-        <Text className="text-white text-lg font-light text-center">Tu asistente climático de invernadero</Text>
-      </View>
-      <Animated.View
-        entering={FadeIn.duration(600)}
-        className="bg-black/50 p-6 rounded-xl"
-      >
-        {/* VPD */}
-        <Pressable
-          className="w-64 py-6 bg-blue-500 rounded-full mb-12 items-center"
-          onPress={() => router.push("/vpd")}
-          
-        >
-          <Text className="text-white font-bold text-lg">CALCULADORA</Text>
-        </Pressable>
-        {/* Invernaderos */}
-        <Pressable
-          className="w-64 py-6 bg-green-500 rounded-full mb-12 items-center"
-          onPress={() => router.push("/greenhouse")}
-        >
-          <Text className="text-white font-bold text-lg">MIS INVERNADEROS</Text>
-        </Pressable>
-        {/* Historial */}
-        <Pressable
-          className="w-64 py-6 bg-blue-500 rounded-full mb-12 items-center"
-          onPress={() => router.push("/history")}
-        >
-          <Text className="text-white font-bold text-lg">HISTORIAL</Text>
-        </Pressable>
-        {/* Guía de Cultivos */}        
-        <Pressable
-          className="w-64 py-6 bg-green-500 rounded-full items-center"
-          onPress={() => router.push('/info')}
-        >
-          <Text className="text-white font-bold text-lg">INFORMACIÓN</Text>
-        </Pressable>
+      <SafeAreaView className="flex-1 w-full items-center justify-between py-6">
+        
+        {/* Título */}
+        <View className="mt-6 bg-black/60 px-6 py-4 rounded-xl items-center">
+          <Text className="text-white text-5xl font-extrabold text-center">🌿 ClimaHort</Text>
+          <Text className="text-white text-lg font-light text-center">Tu asistente climático de invernadero</Text>
+        </View>
 
-      </Animated.View>
-      <View className="absolute bottom-6 w-full items-center px-4 bg-white/80">
-        <View className="px-4 py-2 flex-row items-center justify-center gap-x-8">
-          <Image
-            source={require('@/assets/images/logoInia.png')}
-            style={{ width: 150, height: 100, resizeMode: 'contain' }}
-          />
-          <View>
-            <Text className="text-black text-base font-bold leading-none -mb-4">Cofinanciado por:</Text>
+        {/* Botones */}
+        <Animated.View
+          entering={FadeIn.duration(600)}
+          className="bg-black/50 p-6 rounded-xl items-center"
+        >
+          <Pressable
+            className="w-64 py-5 bg-blue-500 rounded-full mb-6 items-center"
+            onPress={() => router.push("/vpd")}
+          >
+            <Text className="text-white font-bold text-lg">DIAGNOSTICO</Text>
+          </Pressable>
+
+          <Pressable
+            className="w-64 py-5 bg-green-500 rounded-full mb-6 items-center"
+            onPress={() => router.push("/greenhouse")}
+          >
+            <Text className="text-white font-bold text-lg">MIS INVERNADEROS</Text>
+          </Pressable>
+
+          <Pressable
+            className="w-64 py-5 bg-blue-500 rounded-full mb-6 items-center"
+            onPress={() => router.push("/history")}
+          >
+            <Text className="text-white font-bold text-lg">HISTORIAL</Text>
+          </Pressable>
+
+          <Pressable
+            className="w-64 py-5 bg-green-500 rounded-full items-center"
+            onPress={() => router.push('/info')}
+          >
+            <Text className="text-white font-bold text-lg">INFORMACIÓN</Text>
+          </Pressable>
+        </Animated.View>
+
+        {/* Banner Cofinanciado */}
+        <View
+          className="w-full items-center px-4 bg-white/80"
+          style={{
+            paddingBottom: Platform.OS === 'android' ? 8 : 4,
+            paddingTop: 6,
+          }}
+        >
+          <View className="flex-row items-center justify-center gap-x-4">
+            {/* Logo INIA */}
             <Image
-              source={require('@/assets/images/corfo.png')}
-              style={{ width: 150, height: 100, resizeMode: 'contain', marginTop: 0 }}
+              source={require('@/assets/images/logoInia.png')}
+              style={{ width: 100, height: 50, resizeMode: 'contain' }}
             />
+
+            {/* Separador vertical */}
+            <View style={{ width: 1, height: 40, backgroundColor: '#ccc', marginHorizontal: 8 }} />
+
+            {/* Texto y logo CORFO alineados */}
+            <View className="items-center justify-center">
+              <Text className="text-black text-sm font-bold mb-1">Cofinanciado por:</Text>
+              <Image
+                source={require('@/assets/images/corfo.png')}
+                style={{ width: 120, height: 70, resizeMode: 'contain' }}
+              />
+            </View>
           </View>
         </View>
-      </View>
+
+
+      </SafeAreaView>
     </ImageBackground>
   );
 }
-

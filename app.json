@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "inia-app",
-    "slug": "vpd-app",
+    "name": "climahort",
+    "slug": "climahort",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

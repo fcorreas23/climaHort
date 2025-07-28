@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Text, useWindowDimensions, ScrollView, SafeAreaView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Image } from 'react-native';
 import cropData from '@/store/cropData.json';
@@ -11,7 +11,7 @@ import CropCard from '@/components/CropCard';
 const VPDInfo = () => (
     <ScrollView className="p-4 bg-white">
         <Text className="text-xl font-bold mb-2">📘 ¿Qué es el VPD?</Text>
-        <Text className="text-base text-gray-700 mb-4">
+        <Text className="text-base leading-6 text-gray-700 mb-4">
             El Déficit de Presión de Vapor ( VPD ) representa la diferencia entre la cantidad de vapor que el aire puede contener y la que realmente contiene. Es un indicador de la demanda evaporativa de la atmósfera. Un VPD óptimo favorece la transpiración y el crecimiento de las plantas.
         </Text>
         {/* Imagen ilustrativa */}
@@ -21,27 +21,27 @@ const VPDInfo = () => (
         />
 
         <Text className="text-lg font-semibold">🔵 VPD Bajo:</Text>
-        <Text className="text-base text-gray-600 mb-4">
+        <Text className="text-base leading-6 text-gray-600 mb-4">
             El ambiente está muy húmedo. La planta transpira poco, lo que reduce la absorción de nutrientes y puede aumentar el riesgo de enfermedades. Se recomienda mejorar la ventilación y evitar el exceso de riego.
         </Text>
 
         <Text className="text-lg font-semibold">🟢 VPD Óptimo:</Text>
-        <Text className="text-base text-gray-600 mb-4">
+        <Text className="text-base leading-6 text-gray-600 mb-4">
             Las condiciones son ideales para la transpiración y el crecimiento. Mantén el manejo actual de riego y ventilación.
         </Text>
 
         <Text className="text-lg font-semibold">🔴 VPD Alto:</Text>
-        <Text className="text-base text-gray-600 mb-4">
+        <Text className="text-base leading-6 text-gray-600 mb-4">
             El aire está muy seco y las plantas pierden mucha agua. Puede producir estrés hídrico si no se riega a tiempo. Aumenta la humedad del ambiente y evalúa el riego.
         </Text>
 
         <Text className="text-xl font-bold mb-2">📘 ¿Cuando regar?</Text>
-        <Text className="text-base text-gray-700 mb-4">
+        <Text className="text-base leading-6 text-gray-700 mb-4">
             El VPD es un indicador clave para determinar cuándo regar tus plantas. Un VPD óptimo indica que las plantas están bien hidratadas y pueden absorber nutrientes de manera eficiente. Si el VPD es demasiado bajo, las plantas pueden estar sobrehidratadas, mientras que un VPD alto puede indicar que necesitan más agua.
         </Text>
 
         <Text className="text-xl font-bold mb-2">📘 ¿Cuando ventilar?</Text>
-        <Text className="text-base text-gray-700 mb-4">
+        <Text className="text-base leading-6 text-gray-700 mb-4">
             La ventilación es crucial para mantener un VPD óptimo. Ventila cuando el VPD sea bajo y la humedad esté alta para evitar enfermedades. También es útil ventilar si hay condensación o si el ambiente está demasiado caliente.
         </Text>
 
@@ -83,12 +83,13 @@ export default function InfoScreen() {
     ]);
 
     return (
-        <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: layout.width }}
-
-        />
+        <SafeAreaView className="flex-1 bg-white">
+            <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+            />
+        </SafeAreaView>
     );
 }
