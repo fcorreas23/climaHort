@@ -13,7 +13,7 @@ const StackLayout = () => {
         />
         <Stack.Screen 
           name="vpd/index" 
-          options={{ title: 'Diagnostico' }} 
+          options={{ title: 'Diagnóstico' }} 
         />
         <Stack.Screen 
           name="greenhouse/index" 
