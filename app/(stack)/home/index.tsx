@@ -27,7 +27,7 @@ export default function index() {
             className="w-64 py-5 bg-blue-500 rounded-full mb-6 items-center"
             onPress={() => router.push("/vpd")}
           >
-            <Text className="text-white font-bold text-lg">DIAGNOSTICO</Text>
+            <Text className="text-white font-bold text-lg">DIAGNÓSTICO</Text>
           </Pressable>
 
           <Pressable
