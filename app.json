@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "climahort",
-    "slug": "climahort",
+    "slug": "vpd-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#A8E063"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.fcorreas.iniaapp"
@@ -32,7 +32,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#A8E063"
         }
       ],
       "expo-sqlite"

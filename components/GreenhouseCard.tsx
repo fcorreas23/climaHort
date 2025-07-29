@@ -28,7 +28,7 @@ export default function GreenhouseCard({ item }: { item: any }) {
     <View className="border border-gray-300 rounded-xl p-4 mb-4 mx-4 bg-white shadow-sm">
       {/* Título + Botones alineados horizontalmente */}
       <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-2xl font-bold">{item.name}</Text>
+        <Text className="text-4xl font-bold">{item.name}</Text>
 
         <View className="flex-row gap-x-6">
           <Pressable
@@ -48,8 +48,8 @@ export default function GreenhouseCard({ item }: { item: any }) {
       </View>
 
       {/* Info debajo del nombre */}
-      <Text className="text-sm text-gray-700">Tipo: {item.type}</Text>
-      <Text className="text-sm text-gray-700">Ventilación: {item.ventilation_percent}%</Text>
+      <Text className="text-base text-gray-700">Tipo: {item.type}</Text>
+      <Text className="text-base text-gray-700">Ventilación: {item.ventilation_percent}%</Text>
     </View>
   );
 }

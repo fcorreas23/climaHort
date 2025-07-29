@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 
@@ -11,15 +10,14 @@ interface Props {
 
 export default function NumericInputField({ label, value, onChange, error }: Props) {
   return (
-    <View className={`mb-4 ${error ? 'border border-red-500 rounded' : ''}`}>
-      <Text className="font-medium mb-1">{label}</Text>
+    <View className="flex-row items-center justify-between mb-4">
+      <Text className="text-xl text-gray-800 w-70">{label}</Text>
       <TextInput
         keyboardType="numeric"
         value={value}
         onChangeText={onChange}
-        className={`bg-white px-3 py-2 border rounded ${error ? 'border-red-500' : 'border-gray-300'}`}
+        className="w-20 h-12 px-2 py-1 border border-gray-400 rounded-md text-center"
       />
-      {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
     </View>
   );
 }

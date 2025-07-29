@@ -29,6 +29,8 @@ export default function VPDCalculatorScreen() {
   const [diagnostico, setDiagnostico] = useState<any | null>(null);
   const [vpd, setVpd] = useState<number | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [vpdEstado, setVpdEstado] = useState('');
+  const [humedadEstado, setHumedadEstado] = useState('');
 
   const [errors, setErrors] = useState({
     temp: '',
@@ -64,6 +66,8 @@ export default function VPDCalculatorScreen() {
     setVpd(vpd)
     const vpdEstado = getVPDStatus(vpd, crop);
     const humedadEstado = getSoilMeasureStatus(soilType, Number(soilmoisture))
+    setVpdEstado(vpdEstado);
+    setHumedadEstado(humedadEstado);
 
     //Diagnostico
     const result = getDiagnostic( vpdEstado, humedadEstado )
@@ -100,6 +104,7 @@ export default function VPDCalculatorScreen() {
             { label: 'Franco-arenoso', value: 'Franco-arenoso' },
             { label: 'Franco-arcilloso', value: 'Franco-arcilloso' },
             { label: 'Franco-limoso', value: 'Franco-limoso' },
+            { label: 'Trumao (Andisol)', value:'Trumao'}
           ]}
           value={soilType}
           onChange={item => setSoilType(item.value)}
@@ -108,9 +113,9 @@ export default function VPDCalculatorScreen() {
 
 
         <Text className="text-xl font-semibold mb-2 mt-6 text-gray-700">🌡️ Condiciones climáticas</Text>
-        <NumericInputField label="Temperatura ambiental (°C)" value={temp} onChange={setTemp} error={errors.temp} />
-        <NumericInputField label="Humedad relativa (%)" value={humidity} onChange={setHumidity} error={errors.humidity} />
-        <NumericInputField label="Humedad del suelo (%)" value={soilmoisture} onChange={setSoilMoisture} error={errors.soilMoisture} />
+        <NumericInputField label="Temperatura ambiental ( °C )" value={temp} onChange={setTemp} error={errors.temp} />
+        <NumericInputField label="Humedad relativa ( % )" value={humidity} onChange={setHumidity} error={errors.humidity} />
+        <NumericInputField label="Humedad del suelo ( % )" value={soilmoisture} onChange={setSoilMoisture} error={errors.soilMoisture} />
 
         <Pressable onPress={handleCalculate} className="mt-6 bg-green-600 py-4 rounded-xl items-center shadow-lg">
           <Text className="text-white font-bold text-lg">🚀 Calcular VPD</Text>
@@ -129,10 +134,16 @@ export default function VPDCalculatorScreen() {
           <View className="w-full bg-white p-6 rounded-2xl shadow-lg">
             {diagnostico && (
               <>
-                <Text className="text-xl font-bold text-center mb-2">📊 Diagnóstico</Text>
-                <Text className="text-4xl font-extrabold text-center text-gray-800 mb-2">VPD: {vpd?.toFixed(2)}</Text>
-                <Text className="text-lg text-center mb-2 text-gray-700">{diagnostico.mensaje}</Text>
-                <Text className="text-lg text-center mb-4 text-gray-600">{diagnostico.recomendacion}</Text>
+                <Text className="text-2xl font-bold text-center mb-3">📊 Diagnóstico</Text>
+                <View className='mb-4'>
+                  <Text className="text-4xl font-extrabold text-center text-gray-800 mb-2">VPD: {vpd?.toFixed(2)} kPa</Text>
+                  <Text className="text-base text-center text-gray-700">🟢 Estado del VPD: <Text className="font-semibold">{vpdEstado}</Text></Text>
+                  <Text className="text-base text-center text-gray-700">🌱 Estado de humedad del suelo: <Text className="font-semibold">{humedadEstado}</Text> </Text>
+                </View>
+                <View className="mb-3">
+                  <Text className="text-lg text-center text-gray-800 font-semibold"> {diagnostico.mensaje}</Text>
+                  <Text className="text-md text-center text-gray-600 mt-1">{diagnostico.recomendacion}</Text>
+                </View>
                 {diagnostico.patogenos && (
                   <Text className={`text-lg text-center ${diagnostico.patogenos === 'Alto' ? 'text-red-600' : 'text-yellow-600'}`}>
                     🦠 Riesgo de patógenos: {diagnostico.patogenos}
@@ -140,7 +151,7 @@ export default function VPDCalculatorScreen() {
                 )}
               </>
             )}
-            {selectedGreenhouse && (
+            {/* {selectedGreenhouse && (
               <View className="mt-4">
                 <Text className="text-lg text-center text-blue-800 font-medium">
                   La ventilación del invernadero es de: {selectedGreenhouse.ventilation_percent}%
@@ -149,7 +160,7 @@ export default function VPDCalculatorScreen() {
                   {getVentilationAdvice(selectedGreenhouse.ventilation_percent, selectedGreenhouse.has_skylights)}
                 </Text>
               </View>
-            )} 
+            )}  */}
 
             {/* Botón Guardar */}
             <Pressable

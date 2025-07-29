@@ -50,9 +50,9 @@ export default function VPDHistoryScreen() {
 
       {selectedGreenhouse && (
         <>
-          <Text className="text-lg font-semibold mt-4 text-center">
+          {/* <Text className="text-lg font-semibold mt-4 text-center">
             {selectedGreenhouse.name}
-          </Text>
+          </Text> */}
 
           {/* Selector de variable */}
           <DropdownSelector

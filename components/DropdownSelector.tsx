@@ -10,7 +10,7 @@ export default function DropdownSelector({ label, data, value, onChange }: {
 }) {
   return (
     <View className="mb-4">
-      <Text className="text-lg mb-1">{label}</Text>
+      <Text className="text-xl mb-1">{label}</Text>
       <Dropdown
         data={data}
         labelField="label"

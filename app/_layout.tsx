@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { View } from 'react-native';
 import { initDB } from '@/database/db';
+import * as FileSystem from 'expo-file-system';
 
 import "../global.css";
 
@@ -25,6 +26,7 @@ const RootLayout = () => {
   useEffect(() => {
     const prepare = async () => {
       try {
+        //await FileSystem.deleteAsync(`${FileSystem.documentDirectory}SQLite/greenhouses.db`);
         await initDB(); // carga la base de datos
 
         // precarga la imagen de fondo

@@ -6,7 +6,9 @@ export function getSoilMeasureStatus(soilType: string, sm: number): 'Estrés hí
   }> = {
     'Franco-arenoso': { stress: [7, 12], optimal: [10, 15], saturation: [20, 25] },
     'Franco-limoso': { stress: [12, 18], optimal: [18, 28], saturation: [35, 40] },
-    'Franco-arcilloso': { stress: [15, 22], optimal: [22, 35], saturation: [40, 50] }
+    'Franco-arcilloso': { stress: [15, 22], optimal: [22, 35], saturation: [40, 50] },
+    'Trumao': { stress: [5, 30], optimal: [30, 50], saturation: [50, 80] },
+    
   };
 
   const r = ranges[soilType];

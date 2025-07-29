@@ -18,10 +18,10 @@ export const insertGreenhouse = async (greenhouse: any): Promise<void> => {
     `INSERT INTO greenhouses (
       name, type, cover_material,
       length, width, gutter_height, roof_height,
-      has_windows, window_count, window_width, window_height,
+      has_windows, front_window_count, front_window_width, front_window_height, lateral_window_count, lateral_window_width, lateral_window_height,
       has_skylights, skylight_count, skylight_width, skylight_height,
-      ventilation_area, ventilation_percent
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      has_anti_aphid_mesh, ventilation_area, ventilation_percent
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       greenhouse.nombre,
       greenhouse.tipo,
@@ -31,13 +31,17 @@ export const insertGreenhouse = async (greenhouse: any): Promise<void> => {
       parseFloat(greenhouse.alturaCanal),
       parseFloat(greenhouse.alturaTecho),
       greenhouse.tieneVentanas ? 1 : 0,
-      parseInt(greenhouse.numeroVentanas) || 0,
-      parseFloat(greenhouse.anchoVentana) || 0,
-      parseFloat(greenhouse.altoVentana) || 0,
+      parseInt(greenhouse.frontalNumeroVentanas) || 0,
+      parseFloat(greenhouse.frontalAnchoVentana) || 0,
+      parseFloat(greenhouse.frontalAltoVentana) || 0,
+      parseInt(greenhouse.lateralNumeroVentanas) || 0,
+      parseFloat(greenhouse.lateralAnchoVentana) || 0,
+      parseFloat(greenhouse.lateralAltoVentana) || 0,
       greenhouse.tieneLucarnas ? 1 : 0,
       parseInt(greenhouse.numeroLucarnas) || 0,
       parseFloat(greenhouse.anchoLucarna) || 0,
       parseFloat(greenhouse.altoLucarna) || 0,
+      greenhouse.tieneMalla ? 1 :0,
       parseFloat(greenhouse.ventilation_area),
       parseFloat(greenhouse.ventilation_percent),
     ]
@@ -72,9 +76,9 @@ export const updateGreenhouseById = async (id: number, greenhouse: any): Promise
     `UPDATE greenhouses SET
       name = ?, type = ?, cover_material = ?,
       length = ?, width = ?, gutter_height = ?, roof_height = ?,
-      has_windows = ?, window_count = ?, window_width = ?, window_height = ?,
-      has_skylights = ?, skylight_count = ?, skylight_width = ?, skylight_height = ?,
-      ventilation_area = ?, ventilation_percent = ?
+      has_windows = ?, front_window_count = ?, front_window_width = ?, front_window_height = ?,
+      lateral_window_count = ?, lateral_window_width = ?, lateral_window_height = ?,
+      has_skylights = ?, skylight_count = ?, skylight_width = ?, skylight_height = ?,has_anti_aphid_mesh = ?, ventilation_area = ?, ventilation_percent = ?
     WHERE id = ?`,
     [
       greenhouse.nombre,
@@ -85,13 +89,17 @@ export const updateGreenhouseById = async (id: number, greenhouse: any): Promise
       parseFloat(greenhouse.alturaCanal),
       parseFloat(greenhouse.alturaTecho),
       greenhouse.tieneVentanas ? 1 : 0,
-      parseInt(greenhouse.numeroVentanas) || 0,
-      parseFloat(greenhouse.anchoVentana) || 0,
-      parseFloat(greenhouse.altoVentana) || 0,
+      parseInt(greenhouse.frontalNumeroVentanas) || 0,
+      parseFloat(greenhouse.frontalAnchoVentana) || 0,
+      parseFloat(greenhouse.frontalAltoVentana) || 0,
+      parseInt(greenhouse.lateralNumeroVentanas) || 0,
+      parseFloat(greenhouse.lateralAnchoVentana) || 0,
+      parseFloat(greenhouse.lateralAltoVentana) || 0,
       greenhouse.tieneLucarnas ? 1 : 0,
       parseInt(greenhouse.numeroLucarnas) || 0,
       parseFloat(greenhouse.anchoLucarna) || 0,
       parseFloat(greenhouse.altoLucarna) || 0,
+      greenhouse.tieneMalla ? 1 : 0,
       parseFloat(greenhouse.ventilation_area),
       parseFloat(greenhouse.ventilation_percent),
       id,
