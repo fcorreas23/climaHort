@@ -76,7 +76,7 @@ export default function VPDCalculatorScreen() {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-[#f5f5f4]">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {/* <Text className="text-2xl font-bold text-center mb-6 text-green-700">🌿 Calculadora</Text> */}
 
@@ -118,7 +118,7 @@ export default function VPDCalculatorScreen() {
         <NumericInputField label="Humedad del suelo ( % )" value={soilmoisture} onChange={setSoilMoisture} error={errors.soilMoisture} />
 
         <Pressable onPress={handleCalculate} className="mt-6 bg-green-600 py-4 rounded-xl items-center shadow-lg">
-          <Text className="text-white font-bold text-lg">🚀 Calcular VPD</Text>
+          <Text className="text-white font-bold text-lg">🚀 Calcular</Text>
         </Pressable>
 
         {diagnosis !== '' && vpd === null && (

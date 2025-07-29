@@ -34,7 +34,7 @@ export default function VPDHistoryScreen() {
   const chartLabel = variableOptions.find(v => v.value === selectedVariable)?.label ?? '';
 
   return (
-    <ScrollView className="flex-1 bg-white p-4">
+    <ScrollView className="flex-1 bg-[#f5f5f4] p-4">
       <Text className="text-2xl font-bold mb-4 text-center">📈 Historial por Invernadero</Text>
 
       {/* Selector de invernadero */}

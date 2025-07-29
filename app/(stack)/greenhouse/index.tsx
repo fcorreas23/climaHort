@@ -28,7 +28,7 @@ export default function GreenhouseIndex() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-[#f5f5f4]">
       <FlatList
         data={greenhouses}
         keyExtractor={(item) => item.id.toString()}

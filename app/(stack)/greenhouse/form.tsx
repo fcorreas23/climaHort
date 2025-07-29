@@ -183,7 +183,7 @@ export default function GreenhouseForm() {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-[#f5f5f4]">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <SectionTitle>🛠️ Información general</SectionTitle>
         <TextInputField label="Nombre" value={form.nombre} onChange={t => handleChange('nombre', t)} />

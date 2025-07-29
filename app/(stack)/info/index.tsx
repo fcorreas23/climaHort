@@ -9,7 +9,7 @@ import CropCard from '@/components/CropCard';
 
 // Componente 1: ¿Qué es el VPD?
 const VPDInfo = () => (
-    <ScrollView className="p-4 bg-white">
+    <ScrollView className="p-4 bg-[#f5f5f4]">
         <Text className="text-xl font-bold mb-2">📘 ¿Qué es el VPD?</Text>
         <Text className="text-base leading-6 text-gray-700 mb-4">
             El Déficit de Presión de Vapor ( VPD ) representa la diferencia entre la cantidad de vapor que el aire puede contener y la que realmente contiene. Es un indicador de la demanda evaporativa de la atmósfera. Un VPD óptimo favorece la transpiración y el crecimiento de las plantas.
@@ -49,7 +49,7 @@ const VPDInfo = () => (
 );
 
 const CropGuide = () => (
-    <ScrollView className="p-4 bg-white">
+    <ScrollView className="p-4 bg-[#f5f5f4]">
         {/* <Text className="text-xl font-bold mb-2">🌱 Guía por Cultivo</Text> */}
 
         {cropData.map((crop, index) => (
@@ -83,7 +83,7 @@ export default function InfoScreen() {
     ]);
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-[#f5f5f4]">
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
