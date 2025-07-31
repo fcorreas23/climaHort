@@ -57,6 +57,8 @@ const CropGuide = () => (
                 key={ index }
                 icon={ crop.icon }
                 name={ crop.name }
+                temp_optimal={ crop.tmp_optimal }
+                temp_acceptable={ crop.tmp_acceptable }
                 vpd_optimal={ crop.vpd_optimal }
                 vpd_acceptable={ crop.vpd_acceptable }
                 advice={ crop.advice }
