@@ -21,12 +21,23 @@ export function getTempStatus(temperature: number, crop: string): string {
         Tomate:     { optimalMin: 22, optimalMax: 25, acceptableMin: 17, acceptableMax: 28 },
     };
     const range = vpdReference[crop];
-    if (!range) return "Cultivo no reconocido";
-    
-    if (temperature >= range.optimalMin && temperature <= range.optimalMax) return "Óptima";
-    if (temperature >= range.acceptableMin && temperature <= range.acceptableMax) return "Aceptable";
-    if (temperature < range.acceptableMin) return "Baja";
-    if (temperature > range.acceptableMax) return "Alta";
-    
-    return "Fuera de rango";
+    if (!range) return "⚠️ Cultivo no reconocido. Revisa la selección.";
+
+    if (temperature >= range.optimalMin && temperature <= range.optimalMax) {
+        return "✅ La temperatura está en el rango óptimo para este cultivo.";
+    }
+
+    if (temperature >= range.acceptableMin && temperature <= range.acceptableMax) {
+        return "🟡 La temperatura es aceptable para este cultivo, pero no óptima.";
+    }
+
+    if (temperature < range.acceptableMin) {
+        return "🔵 La temperatura está por debajo del rango adecuado para este cultivo.";
+    }
+
+    if (temperature > range.acceptableMax) {
+        return "🔴 La temperatura es demasiado alta para este cultivo.";
+    }
+
+    return "❓ No se pudo determinar el estado de la temperatura.";    
 }
